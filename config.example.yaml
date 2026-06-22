@@ -58,7 +58,7 @@ comfyui:
   tts:
     inference_mode: comfyui
     comfyui:
-      default_workflow: runninghub/tts_index2_popular.json  # Index-TTS, supports reference-audio voice cloning
+      default_workflow: runninghub/tts_index2.json  # Index-TTS, supports reference-audio voice cloning
   
   # Image-specific configuration
   image:

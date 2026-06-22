@@ -68,7 +68,7 @@ class TTSLocalConfig(BaseModel):
 
 class TTSComfyUIConfig(BaseModel):
     """ComfyUI TTS configuration"""
-    default_workflow: Optional[str] = Field(default="runninghub/tts_index2_popular.json", description="Default TTS workflow (optional)")
+    default_workflow: Optional[str] = Field(default="runninghub/tts_index2.json", description="Default TTS workflow (optional)")
 
 
 class TTSSubConfig(BaseModel):
