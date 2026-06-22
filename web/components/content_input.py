@@ -44,6 +44,7 @@ def render_content_input():
                 ["generate", "fixed"],
                 horizontal=True,
                 format_func=lambda x: tr(f"mode.{x}"),
+                index=1,  # Default to fixed/custom script mode
                 label_visibility="collapsed"
             )
             
@@ -70,7 +71,7 @@ def render_content_input():
                     tr("split.mode_label"),
                     options=list(split_mode_options.keys()),
                     format_func=lambda x: split_mode_options[x],
-                    index=0,  # Default to paragraph mode
+                    index=2,  # Default to sentence split mode
                     help=tr("split.mode_help")
                 )
             else:

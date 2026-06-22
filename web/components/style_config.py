@@ -314,11 +314,12 @@ def render_style_config(pixelle_video):
         }
         
         # Radio buttons in horizontal layout
+        default_template_type = "video"
         selected_template_type = st.radio(
             tr('template.type_selector'),
             options=list(template_type_options.keys()),
             format_func=lambda x: template_type_options[x],
-            index=1,  # Default to 'image'
+            index=list(template_type_options.keys()).index(default_template_type),
             key="template_type_selector",
             label_visibility="collapsed",
             horizontal=True
@@ -704,6 +705,9 @@ def render_style_config(pixelle_video):
         media_height = st.session_state.get('template_media_height')
         media_config_key = "video" if template_media_type == "video" else "image"
         saved_workflow = comfyui_config.get(media_config_key, {}).get("default_workflow") or ""
+        preferred_video_workflow = "api/agnes/agnes-video-v2.0"
+        if template_media_type == "video" and not saved_workflow:
+            saved_workflow = preferred_video_workflow
         workflow_key = None
 
         with st.container(border=True):

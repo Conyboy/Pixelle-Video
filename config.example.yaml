@@ -71,9 +71,10 @@ comfyui:
   # Video-specific configuration
   video:
     # Required: Default workflow to use (no fallback)
-    # Options: runninghub/video_wan2.1_fusionx.json (recommended, no local setup)
+    # Options: api/agnes/agnes-video-v2.0 (recommended API model)
+    #          runninghub/video_wan2.1_fusionx.json (cloud workflow)
     #          selfhost/video_wan2.1_fusionx.json (requires local ComfyUI)
-    default_workflow: runninghub/video_wan2.1_fusionx.json
+    default_workflow: api/agnes/agnes-video-v2.0
     concurrent_limit: 1  # Concurrent frame processing limit for a single generated video (1-10)
     
     # Video prompt prefix (optional)
@@ -93,4 +94,4 @@ template:
   #   - 1080x1080 (square): image_minimal_framed.html, etc.
   #   - 1920x1080 (horizontal/landscape): image_film.html, image_full.html, etc.
   # See templates/ directory for all available templates
-  default_template: "1080x1920/image_default.html"
+  default_template: "1080x1920/video_default.html"

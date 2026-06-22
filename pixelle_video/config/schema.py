@@ -118,7 +118,7 @@ class ComfyUIConfig(BaseModel):
 class TemplateConfig(BaseModel):
     """Template configuration"""
     default_template: str = Field(
-        default="1080x1920/default.html",
+        default="1080x1920/video_default.html",
         description="Default frame template path"
     )
 
