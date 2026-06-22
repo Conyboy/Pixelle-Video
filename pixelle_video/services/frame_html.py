@@ -30,9 +30,9 @@ import os
 import re
 import tempfile
 import uuid
-import asyncio
-from typing import Dict, Any, Optional
 from pathlib import Path
+from typing import Any, Dict, Optional
+
 from loguru import logger
 
 from pixelle_video.utils.template_util import parse_template_size
@@ -87,7 +87,7 @@ class HTMLFrameGenerator:
             result = subprocess.run(
                 ['fc-list'], 
                 capture_output=True, 
-                timeout=2
+                timeout=30
             )
             
             if result.returncode != 0:
@@ -290,7 +290,6 @@ class HTMLFrameGenerator:
         
         def replacer(match):
             param_name = match.group(1)
-            param_type = match.group(2) or 'text'
             default_value_str = match.group(3)
             
             if param_name in values:
@@ -353,7 +352,7 @@ class HTMLFrameGenerator:
         if cls._browser:
             try:
                 if cls._browser.is_connected():
-                    await asyncio.wait_for(cls._browser.close(), timeout=5)
+                    await asyncio.wait_for(cls._browser.close(), timeout=30)
             except Exception as e:
                 logger.debug(f"Ignoring error while closing stale browser: {e}")
             finally:
@@ -361,7 +360,7 @@ class HTMLFrameGenerator:
 
         if cls._playwright:
             try:
-                await asyncio.wait_for(cls._playwright.stop(), timeout=5)
+                await asyncio.wait_for(cls._playwright.stop(), timeout=30)
             except Exception as e:
                 logger.debug(f"Ignoring error while stopping stale Playwright: {e}")
             finally:

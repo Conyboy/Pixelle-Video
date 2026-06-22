@@ -18,6 +18,7 @@ Uses the OpenAI-compatible models endpoint.
 
 import re
 from typing import List, Tuple
+
 import httpx
 from loguru import logger
 
@@ -51,7 +52,7 @@ def normalize_openai_base_url(base_url: str) -> str:
     return normalized
 
 
-def fetch_available_models(api_key: str, base_url: str, timeout: float = 10.0) -> List[str]:
+def fetch_available_models(api_key: str, base_url: str, timeout: float = 30.0) -> List[str]:
     """
     Fetch available models from an OpenAI-compatible API endpoint.
     
@@ -93,7 +94,7 @@ def fetch_available_models(api_key: str, base_url: str, timeout: float = 10.0) -
         return models
 
 
-def test_llm_connection(api_key: str, base_url: str, timeout: float = 10.0) -> Tuple[bool, str, int]:
+def test_llm_connection(api_key: str, base_url: str, timeout: float = 30.0) -> Tuple[bool, str, int]:
     """
     Test the LLM API connection by attempting to fetch the models list.
     

@@ -213,6 +213,8 @@
     "settings.comfyui.runninghub_get_api_key": "点此获取 RunningHub API Key",
     "settings.comfyui.runninghub_concurrent_limit": "并发限制",
     "settings.comfyui.runninghub_concurrent_limit_help": "RunningHub 并发执行数量（1-10），普通会员默认为1，请根据您的会员等级调整",
+    "settings.video.concurrent_limit": "视频分镜并发数",
+    "settings.video.concurrent_limit_help": "单个视频内同时处理的分镜数量（1-10）。请根据模型供应商额度和本机性能谨慎调高。",
     "settings.comfyui.runninghub_instance_type": "机器规格",
     "settings.comfyui.runninghub_instance_type_help": "选择 RunningHub 机器规格，48G 显存适用于大模型或高分辨率生成（需要会员支持）",
     "settings.comfyui.runninghub_instance_24g": "24G 显存",

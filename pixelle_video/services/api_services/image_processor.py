@@ -1,10 +1,11 @@
-import os
-import requests
-import numpy as np
-from pathlib import Path
-from datetime import datetime, timedelta
-from PIL import Image
 import logging
+import os
+from datetime import datetime, timedelta
+from pathlib import Path
+
+import numpy as np
+import requests
+from PIL import Image
 
 
 class ImageProcessor:
@@ -147,6 +148,7 @@ class ImageProcessor:
             max_retries: 最大重试次数
         """
         import time
+
         import urllib3
         
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -155,7 +157,7 @@ class ImageProcessor:
             try:
                 response = requests.get(
                     image_url, 
-                    timeout=(10, 30),
+                    timeout=(30, 60),
                     stream=True,
                     verify=True,
                     proxies=self._proxies(),
@@ -185,7 +187,7 @@ class ImageProcessor:
                     try:
                         response = requests.get(
                             image_url, 
-                            timeout=(10, 30),
+                            timeout=(30, 60),
                             stream=True,
                             verify=False,
                             proxies=self._proxies(),

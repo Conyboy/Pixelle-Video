@@ -213,6 +213,8 @@
     "settings.comfyui.runninghub_get_api_key": "Get RunningHub API Key",
     "settings.comfyui.runninghub_concurrent_limit": "Concurrent Limit",
     "settings.comfyui.runninghub_concurrent_limit_help": "RunningHub concurrent execution limit (1-10), default is 1 for regular members, adjust based on your membership level",
+    "settings.video.concurrent_limit": "Video Segment Concurrency",
+    "settings.video.concurrent_limit_help": "Number of storyboard frames to process concurrently inside one video (1-10). Increase carefully based on provider and machine capacity.",
     "settings.comfyui.runninghub_instance_type": "Machine Spec",
     "settings.comfyui.runninghub_instance_type_help": "Select RunningHub machine spec, 48G VRAM is suitable for large models or high-resolution generation (requires membership support)",
     "settings.comfyui.runninghub_instance_24g": "24G VRAM",

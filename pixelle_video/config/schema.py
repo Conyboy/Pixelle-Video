@@ -96,6 +96,7 @@ class ImageSubConfig(BaseModel):
 class VideoSubConfig(BaseModel):
     """Video-specific configuration (under comfyui.video)"""
     default_workflow: Optional[str] = Field(default=None, description="Default video workflow (optional)")
+    concurrent_limit: int = Field(default=1, ge=1, le=10, description="Single-video frame concurrent limit (1-10)")
     prompt_prefix: str = Field(
         default="Minimalist black-and-white matchstick figure style illustration, clean lines, simple sketch style",
         description="Prompt prefix for all video generation"

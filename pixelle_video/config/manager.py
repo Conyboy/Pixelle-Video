@@ -17,9 +17,11 @@ Provides unified access to configuration with automatic validation.
 """
 from pathlib import Path
 from typing import Any, Optional
+
 from loguru import logger
-from .schema import PixelleVideoConfig
+
 from .loader import load_config_dict, save_config_dict
+from .schema import PixelleVideoConfig
 
 
 class ConfigManager:
@@ -143,6 +145,7 @@ class ConfigManager:
             },
             "video": {
                 "default_workflow": self.config.comfyui.video.default_workflow,
+                "concurrent_limit": self.config.comfyui.video.concurrent_limit,
                 "prompt_prefix": self.config.comfyui.video.prompt_prefix,
             }
         }

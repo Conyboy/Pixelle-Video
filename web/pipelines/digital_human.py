@@ -665,7 +665,7 @@ class DigitalHumanPipelineUI(PipelineUI):
                                 raise Exception("The second step of the workflow did not return a video. Please check the workflow configuration.")
                                         
                             final_video_path = os.path.join(task_dir, "final.mp4")
-                            timeout = httpx.Timeout(300.0)
+                            timeout = httpx.Timeout(600.0)
                             async with httpx.AsyncClient(timeout=timeout) as client:
                                 response = await client.get(generated_video_url)
                                 response.raise_for_status()
@@ -776,7 +776,7 @@ class DigitalHumanPipelineUI(PipelineUI):
                                     raise Exception("The second step of the workflow did not return a video. Please check the workflow configuration.")
                                             
                                 final_video_path = os.path.join(task_dir, "final.mp4")
-                                timeout = httpx.Timeout(300.0)
+                                timeout = httpx.Timeout(600.0)
                                 async with httpx.AsyncClient(timeout=timeout) as client:
                                     response = await client.get(generated_video_url)
                                     response.raise_for_status()
@@ -882,7 +882,7 @@ class DigitalHumanPipelineUI(PipelineUI):
                                     raise Exception("The second step of the workflow did not return a video. Please check the workflow configuration.")
                                             
                                 final_video_path = os.path.join(task_dir, "final.mp4")
-                                timeout = httpx.Timeout(300.0)
+                                timeout = httpx.Timeout(600.0)
                                 async with httpx.AsyncClient(timeout=timeout) as client:
                                     response = await client.get(generated_video_url)
                                     response.raise_for_status()

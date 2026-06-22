@@ -437,7 +437,7 @@ class ActionTransferPipelineUI(PipelineUI):
                         if not generated_video_url:
                             raise Exception("The workflow did not return a video. Please check the workflow configuration.")
 
-                        timeout = httpx.Timeout(300.0)
+                        timeout = httpx.Timeout(600.0)
                         async with httpx.AsyncClient(timeout=timeout) as client:
                             response = await client.get(generated_video_url)
                             response.raise_for_status()

@@ -3,12 +3,13 @@ Seedance 视频生成 API 客户端 (字节跳动 ARK)
 
 """
 
+import base64
+import logging
 import os
 import time
-import logging
-import requests
-import base64
 from typing import Optional
+
+import requests
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +24,7 @@ class SeedanceVideoClient:
         api_key: Optional[str] = None,
         base_url: Optional[str] = None,
         local_proxy: Optional[str] = None,
-        timeout: int = 120,
+        timeout: int = 300,
     ) -> None:
         self.api_key = api_key or os.getenv("ARK_API_KEY")
         self.base_url = (base_url or os.getenv("ARK_BASE_URL") or "https://ark.cn-beijing.volces.com/api/v3").rstrip("/")
@@ -146,7 +147,7 @@ class SeedanceVideoClient:
         url = f"{self.base_url}/contents/generations/tasks/{task_id}"
         
         for i in range(max_polls):
-            resp = requests.get(url, headers=self._headers(), timeout=30, proxies=self._proxies())
+            resp = requests.get(url, headers=self._headers(), timeout=60, proxies=self._proxies())
             resp.raise_for_status()
             data = resp.json()
             
@@ -168,7 +169,7 @@ class SeedanceVideoClient:
 
     def _download_video(self, url: str, save_path: str):
         os.makedirs(os.path.dirname(save_path), exist_ok=True)
-        resp = requests.get(url, stream=True, timeout=120, proxies=self._proxies())
+        resp = requests.get(url, stream=True, timeout=300, proxies=self._proxies())
         resp.raise_for_status()
         with open(save_path, "wb") as f:
             for chunk in resp.iter_content(chunk_size=8192):

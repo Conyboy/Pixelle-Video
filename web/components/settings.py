@@ -239,7 +239,7 @@ def render_advanced_settings():
                 if st.button(tr("btn.test_connection"), key="test_comfyui", use_container_width=True):
                     try:
                         import requests
-                        response = requests.get(f"{comfyui_url}/system_stats", timeout=5)
+                        response = requests.get(f"{comfyui_url}/system_stats", timeout=30)
                         if response.status_code == 200:
                             st.success(tr("status.connection_success"))
                         else:

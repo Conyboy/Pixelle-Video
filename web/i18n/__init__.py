@@ -22,7 +22,7 @@ from typing import Dict, Optional
 from loguru import logger
 
 _locales: Dict[str, dict] = {}
-_current_language: str = "en_US"  # Default fallback to English
+_current_language: str = "zh_CN"  # Default fallback to Chinese
 
 
 def load_locales() -> Dict[str, dict]:
@@ -151,7 +151,7 @@ def detect_system_language() -> str:
                     ["defaults", "read", "-g", "AppleLocale"],
                     capture_output=True,
                     text=True,
-                    timeout=2
+                    timeout=30
                 )
                 if result.returncode == 0:
                     system_locale = result.stdout.strip()
@@ -166,7 +166,7 @@ def detect_system_language() -> str:
                         ["defaults", "read", "-g", "AppleLanguages"],
                         capture_output=True,
                         text=True,
-                        timeout=2
+                        timeout=30
                     )
                     if result.returncode == 0:
                         # Parse array output like: ( "zh-Hans-CN", "en-CN" )
@@ -242,8 +242,7 @@ def detect_system_language() -> str:
 # Auto-load locales on import
 load_locales()
 
-# Auto-detect and set system language
-_detected_language = detect_system_language()
-_current_language = _detected_language
+# Default to Chinese at startup. Users can still switch language explicitly in the UI.
+_current_language = "zh_CN"
 logger.info(f"Default language initialized to: {_current_language}")
 

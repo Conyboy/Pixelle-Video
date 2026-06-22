@@ -21,7 +21,7 @@ class AgnesVideoClient:
         api_key: Optional[str] = None,
         base_url: Optional[str] = None,
         local_proxy: Optional[str] = None,
-        timeout: int = 120,
+        timeout: int = 300,
         poll_interval: int = 5,
         max_polls: int = 120,
     ) -> None:
@@ -126,7 +126,7 @@ class AgnesVideoClient:
             resp = requests.get(
                 url,
                 headers=self._headers(),
-                timeout=30,
+                timeout=60,
                 proxies=self._proxies(),
             )
             resp.raise_for_status()
@@ -159,7 +159,7 @@ class AgnesVideoClient:
         resp = requests.get(
             url,
             stream=True,
-            timeout=120,
+            timeout=300,
             proxies=self._proxies(),
         )
         resp.raise_for_status()

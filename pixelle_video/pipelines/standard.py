@@ -18,38 +18,31 @@ This is the default pipeline for general-purpose video generation.
 Refactored to use LinearVideoPipeline (Template Method Pattern).
 """
 
-from datetime import datetime
-from pathlib import Path
-from typing import Optional, Callable, Literal, List
 import asyncio
 import shutil
+from datetime import datetime
+from pathlib import Path
 
 from loguru import logger
 
-from pixelle_video.pipelines.linear import LinearVideoPipeline, PipelineContext
 from pixelle_video.models.progress import ProgressEvent
 from pixelle_video.models.storyboard import (
     Storyboard,
-    StoryboardFrame,
     StoryboardConfig,
-    ContentMetadata,
-    VideoGenerationResult
+    StoryboardFrame,
+    VideoGenerationResult,
 )
-from pixelle_video.utils.content_generators import (
-    generate_title,
-    generate_narrations_from_topic,
-    split_narration_script,
-    generate_image_prompts,
-)
-from pixelle_video.utils.os_util import (
-    create_task_output_dir,
-    get_task_final_video_path
-)
-from pixelle_video.utils.template_util import get_template_type
-from pixelle_video.utils.prompt_helper import build_image_prompt
+from pixelle_video.pipelines.linear import LinearVideoPipeline, PipelineContext
 from pixelle_video.services.video import VideoService
-
-
+from pixelle_video.utils.content_generators import (
+    generate_image_prompts,
+    generate_narrations_from_topic,
+    generate_title,
+    split_narration_script,
+)
+from pixelle_video.utils.os_util import create_task_output_dir, get_task_final_video_path
+from pixelle_video.utils.prompt_helper import build_image_prompt
+from pixelle_video.utils.template_util import get_template_type
 
 
 class StandardPipeline(LinearVideoPipeline):
@@ -161,12 +154,12 @@ class StandardPipeline(LinearVideoPipeline):
         template_requires_media = (template_type in ["image", "video"])
         
         if template_type == "image":
-            logger.info(f"📸 Template requires image generation")
+            logger.info("📸 Template requires image generation")
         elif template_type == "video":
-            logger.info(f"🎬 Template requires video generation")
+            logger.info("🎬 Template requires video generation")
         else:  # static
-            logger.info(f"⚡ Static template - skipping media generation pipeline")
-            logger.info(f"   💡 Benefits: Faster generation + Lower cost + No ComfyUI dependency")
+            logger.info("⚡ Static template - skipping media generation pipeline")
+            logger.info("   💡 Benefits: Faster generation + Lower cost + No ComfyUI dependency")
         
         # Only generate image prompts if template requires media
         if template_requires_media:
@@ -223,7 +216,7 @@ class StandardPipeline(LinearVideoPipeline):
         else:
             # Static template - skip image prompt generation entirely
             ctx.image_prompts = [None] * len(ctx.narrations)
-            logger.info(f"⚡ Skipped image prompt generation (static template)")
+            logger.info("⚡ Skipped image prompt generation (static template)")
             logger.info(f"   💡 Savings: {len(ctx.narrations)} LLM calls + {len(ctx.narrations)} media generations")
 
     async def initialize_storyboard(self, ctx: PipelineContext):
@@ -296,20 +289,17 @@ class StandardPipeline(LinearVideoPipeline):
         storyboard = ctx.storyboard
         config = ctx.config
         
-        # Check if using RunningHub workflows for parallel processing
-        is_runninghub = (
-            (config.tts_workflow and config.tts_workflow.startswith("runninghub/")) or
-            (config.media_workflow and config.media_workflow.startswith("runninghub/"))
-        )
-        
-        # Get concurrent limit from config_manager (supports hot reload without restart)
+        # Get single-video frame concurrent limit from params/config.
         from pixelle_video.config import config_manager
-        runninghub_concurrent_limit = config_manager.config.comfyui.runninghub_concurrent_limit or 1
+        video_concurrent_limit = ctx.params.get("video_concurrent_limit")
+        if video_concurrent_limit is None:
+            video_concurrent_limit = config_manager.config.comfyui.video.concurrent_limit
+        video_concurrent_limit = int(video_concurrent_limit or 1)
         
-        if is_runninghub and runninghub_concurrent_limit > 1:
-            logger.info(f"🚀 Using parallel processing for RunningHub workflows (max {runninghub_concurrent_limit} concurrent)")
+        if video_concurrent_limit > 1 and len(storyboard.frames) > 1:
+            logger.info(f"🚀 Using parallel processing for storyboard frames (max {video_concurrent_limit} concurrent)")
             
-            semaphore = asyncio.Semaphore(runninghub_concurrent_limit)
+            semaphore = asyncio.Semaphore(video_concurrent_limit)
             completed_count = 0
             
             async def process_frame_with_semaphore(i: int, frame: StoryboardFrame):
@@ -365,8 +355,8 @@ class StandardPipeline(LinearVideoPipeline):
             
             logger.info(f"✅ All frames processed in parallel (total duration: {storyboard.total_duration:.2f}s)")
         else:
-            # Serial processing for non-RunningHub workflows
-            logger.info("⚙️ Using serial processing (non-RunningHub workflow)")
+            # Serial processing when concurrency is disabled or only one frame exists
+            logger.info("⚙️ Using serial processing")
             
             for i, frame in enumerate(storyboard.frames):
                 base_progress = 0.2

@@ -14,16 +14,15 @@
 Style configuration components for web UI (middle column)
 """
 
-import os
 import base64
+import os
 from pathlib import Path
 
 import streamlit as st
 from loguru import logger
 
-from web.i18n import tr, get_language
-from web.utils.async_helpers import run_async
-from web.utils.streamlit_helpers import check_and_warn_selfhost_workflow
+from pixelle_video.config import config_manager
+from web.i18n import get_language, tr
 from web.pipelines.api_workflows import (
     list_api_media_workflows,
     list_local_media_workflows,
@@ -32,7 +31,8 @@ from web.pipelines.api_workflows import (
     workflow_source_help,
     workflow_source_label,
 )
-from pixelle_video.config import config_manager
+from web.utils.async_helpers import run_async
+from web.utils.streamlit_helpers import check_and_warn_selfhost_workflow
 
 
 def is_api_workflow(workflow_key: str | None) -> bool:
@@ -299,7 +299,10 @@ def render_style_config(pixelle_video):
         current_lang = get_language()
         
         # Import template utilities
-        from pixelle_video.utils.template_util import get_templates_grouped_by_size_and_type, get_template_type
+        from pixelle_video.utils.template_util import (
+            get_template_type,
+            get_templates_grouped_by_size_and_type,
+        )
         
         # Template type selector
         st.markdown(f"**{tr('template.type_selector')}**")
@@ -512,6 +515,7 @@ def render_style_config(pixelle_video):
         
         # Custom template parameters (for video generation)
         from pixelle_video.services.frame_html import HTMLFrameGenerator
+
         # Resolve template path to support both data/templates/ and templates/
         from pixelle_video.utils.template_util import resolve_template_path
         template_path_for_params = resolve_template_path(frame_template)
@@ -524,7 +528,6 @@ def render_style_config(pixelle_video):
         st.session_state['template_media_height'] = media_height
         
         # Detect template media type
-        from pixelle_video.utils.template_util import get_template_type
         
         template_name = Path(frame_template).name
         template_media_type = get_template_type(template_name)
@@ -839,6 +842,19 @@ def render_style_config(pixelle_video):
                 label_visibility="visible",
                 help=tr("style.prompt_prefix_help")
             )
+
+            video_concurrent_limit = None
+            if template_media_type == "video":
+                current_video_limit = int(comfyui_config.get("video", {}).get("concurrent_limit", 1) or 1)
+                video_concurrent_limit = st.number_input(
+                    tr("settings.video.concurrent_limit"),
+                    min_value=1,
+                    max_value=10,
+                    value=current_video_limit,
+                    step=1,
+                    help=tr("settings.video.concurrent_limit_help"),
+                    key="video_concurrent_limit",
+                )
         
             # Media preview expander
             preview_title = tr("style.video_preview_title") if template_media_type == "video" else tr("style.preview_title")
@@ -931,6 +947,7 @@ def render_style_config(pixelle_video):
             # Set default values for later use
             workflow_key = None
             prompt_prefix = ""
+            video_concurrent_limit = None
     
     # Return all style configuration parameters
     final_media_workflow = workflow_key
@@ -946,6 +963,7 @@ def render_style_config(pixelle_video):
         "media_workflow": final_media_workflow,
         "api_video_params": api_video_params if template_media_type == "video" else None,
         "prompt_prefix": prompt_prefix if prompt_prefix else "",
+        "video_concurrent_limit": int(video_concurrent_limit) if video_concurrent_limit is not None else None,
         "media_width": media_width,
         "media_height": media_height
     }

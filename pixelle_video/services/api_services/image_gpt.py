@@ -1,9 +1,11 @@
+import base64
 import os
 import time
 import uuid
-import base64
+
 import httpx
 from openai import OpenAI
+
 try:
     from .image_processor import ImageProcessor
 except ImportError:
@@ -21,7 +23,7 @@ class ImageGPT:
                  api_key: str = None,
                  base_url: str = None,
                  local_proxy: str = None,
-                 timeout: float = 300.0):
+                 timeout: float = 600.0):
         """
         OpenAI 图片生成客户端
         :param api_key: API Key
@@ -128,7 +130,6 @@ class ImageGPT:
                 raise RuntimeError("未在响应中找到 url 或 b64_json")
             except Exception as e:
                 last_error = e
-                msg = str(e)
                 # Other errors: wait before retry
                 print(f"Image generation error: {e}. Retrying in 10 seconds.")
                 time.sleep(10)
@@ -147,7 +148,6 @@ class ImageGPT:
 
 if __name__ == "__main__":
     import sys
-    import tempfile
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     from config import Config
 
