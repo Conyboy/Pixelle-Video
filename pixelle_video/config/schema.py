@@ -68,12 +68,12 @@ class TTSLocalConfig(BaseModel):
 
 class TTSComfyUIConfig(BaseModel):
     """ComfyUI TTS configuration"""
-    default_workflow: Optional[str] = Field(default=None, description="Default TTS workflow (optional)")
+    default_workflow: Optional[str] = Field(default="runninghub/tts_index2.json", description="Default TTS workflow (optional)")
 
 
 class TTSSubConfig(BaseModel):
     """TTS-specific configuration (under comfyui.tts)"""
-    inference_mode: str = Field(default="local", description="TTS inference mode: 'local' or 'comfyui'")
+    inference_mode: str = Field(default="comfyui", description="TTS inference mode: 'local' or 'comfyui'")
     local: TTSLocalConfig = Field(default_factory=TTSLocalConfig, description="Local TTS (Edge TTS) configuration")
     comfyui: TTSComfyUIConfig = Field(default_factory=TTSComfyUIConfig, description="ComfyUI TTS configuration")
     

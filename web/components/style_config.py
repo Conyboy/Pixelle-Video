@@ -63,7 +63,7 @@ def render_style_config(pixelle_video):
             ["local", "comfyui"],
             horizontal=True,
             format_func=lambda x: tr(f"tts.mode.{x}"),
-            index=0 if tts_config.get("inference_mode", "local") == "local" else 1,
+            index=0 if tts_config.get("inference_mode", "comfyui") == "local" else 1,
             key="tts_inference_mode"
         )
         
@@ -146,7 +146,7 @@ def render_style_config(pixelle_video):
             
             # Default to saved workflow if exists
             default_tts_index = 0
-            saved_tts_workflow = tts_config.get("comfyui", {}).get("default_workflow")
+            saved_tts_workflow = tts_config.get("comfyui", {}).get("default_workflow") or "runninghub/tts_index2.json"
             if saved_tts_workflow and saved_tts_workflow in tts_workflow_keys:
                 default_tts_index = tts_workflow_keys.index(saved_tts_workflow)
             
@@ -163,7 +163,7 @@ def render_style_config(pixelle_video):
                 tts_selected_index = tts_workflow_options.index(tts_workflow_display)
                 tts_workflow_key = tts_workflow_keys[tts_selected_index]
             else:
-                tts_workflow_key = "selfhost/tts_edge.json"  # fallback
+                tts_workflow_key = "runninghub/tts_index2.json"  # fallback
             
             # Check and warn for selfhost TTS workflow (auto popup if not confirmed)
             check_and_warn_selfhost_workflow(tts_workflow_key)

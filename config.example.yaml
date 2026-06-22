@@ -56,7 +56,9 @@ comfyui:
   
   # TTS-specific configuration
   tts:
-    default_workflow: selfhost/tts_edge.json  # TTS workflow to use
+    inference_mode: comfyui
+    comfyui:
+      default_workflow: runninghub/tts_index2.json  # Index-TTS, supports reference-audio voice cloning
   
   # Image-specific configuration
   image:
