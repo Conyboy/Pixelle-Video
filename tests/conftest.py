@@ -24,3 +24,14 @@ if "comfykit" not in sys.modules:
 
     comfykit_stub.ComfyKit = ComfyKit
     sys.modules["comfykit"] = comfykit_stub
+
+if "ffmpeg" not in sys.modules:
+    ffmpeg_stub = types.ModuleType("ffmpeg")
+
+    class Error(Exception):
+        def __init__(self, *args, stderr=None):
+            super().__init__(*args)
+            self.stderr = stderr
+
+    ffmpeg_stub.Error = Error
+    sys.modules["ffmpeg"] = ffmpeg_stub
