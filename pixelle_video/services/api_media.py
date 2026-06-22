@@ -5,8 +5,8 @@
 """Direct API provider media generation adapter."""
 
 import asyncio
-from copy import deepcopy
 import os
+from copy import deepcopy
 from pathlib import Path
 from typing import Any, Optional
 
@@ -58,6 +58,9 @@ class APIProviderMediaService:
             "doubao-seedance-2-0-fast-260128",
             "seedance-1-0-pro",
             "seedance-1-0-lite",
+        ],
+        "agnes": [
+            "agnes-video-v2.0",
         ],
     }
 
@@ -373,6 +376,26 @@ class APIProviderMediaService:
                 "Exact official model ID was not found. Volcengine docs refer to doubao-seedance model IDs, so this alias must be confirmed before relying on it.",
             ],
         },
+        ("agnes", "agnes-video-v2.0"): {
+            "ability_type": "text_to_video",
+            "ability_types": ["text_to_video"],
+            "adapter_ability_types": ["text_to_video"],
+            "input_modalities": ["text"],
+            "adapter_input_modalities": ["text"],
+            "duration": {"min": 1, "max": 20, "integer": True, "verified": False},
+            "resolutions": ["480p", "720p", "1080p"],
+            "ratios": ["16:9", "9:16", "1:1", "4:3", "3:4"],
+            "fps": 24,
+            "format": "mp4",
+            "api_contract_verified": True,
+            "source_urls": [
+                "https://agnes-ai.com/doc/agnes-video-v20",
+            ],
+            "contract_issues": [
+                "First Pixelle integration intentionally supports text-to-video only. Agnes image-to-video, multi-image, and keyframe modes require public image URLs and are out of scope.",
+                "Pixelle passes template width/height plus frame_rate=24. Agnes may standardize the final output size and duration in the task response.",
+            ],
+        },
     }
 
     def __init__(self, config: dict, core=None):
@@ -477,7 +500,6 @@ class APIProviderMediaService:
         image_paths: Optional[list[str]] = None,
         **params,
     ) -> MediaResult:
-        from pixelle_video.services.api_services.image_client import ImageClient
 
         client = self._create_image_client()
         save_dir = self._save_dir(output_path, "api_images")
@@ -520,7 +542,6 @@ class APIProviderMediaService:
         height: Optional[int],
         **params,
     ) -> MediaResult:
-        from pixelle_video.services.api_services.video_client import VideoClient
 
         first_clip_path = params.get("first_clip_path") or params.get("first_video_path")
         reference_image_path = params.get("reference_image_path")
@@ -544,6 +565,14 @@ class APIProviderMediaService:
         safe_duration = self._video_duration(provider, model, requested_duration)
         resolution = params.get("resolution") or self._video_resolution(provider, width, height)
         video_options = self._video_options(provider, model, params, resolution)
+        if provider == "agnes":
+            video_options.update(
+                {
+                    "width": width,
+                    "height": height,
+                    "frame_rate": params.get("frame_rate") or 24,
+                }
+            )
 
         prompt_to_use = prompt
         max_safety_retries = int(params.get("prompt_safety_retries", 1))
@@ -680,6 +709,9 @@ class APIProviderMediaService:
             ark_api_key=cfg["ark"].get("api_key") or None,
             ark_base_url=cfg["ark"].get("base_url") or None,
             ark_local_proxy=local_proxy if cfg["ark"].get("use_proxy") else None,
+            agnes_api_key=cfg["agnes"].get("api_key") or None,
+            agnes_base_url=cfg["agnes"].get("base_url") or None,
+            agnes_local_proxy=local_proxy if cfg["agnes"].get("use_proxy") else None,
         )
 
     def _create_video_client(self):
