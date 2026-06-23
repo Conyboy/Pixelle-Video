@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>反焦虑模板方向</title>
+  <style>
+    :root {
+      --ink: #141513;
+      --paper: #f2eee5;
+      --acid: #c8ff3d;
+      --blue: #59c7ff;
+      --red: #ff5d59;
+      --muted: #776f63;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(200,255,61,.22), transparent 28%),
+        linear-gradient(135deg, #e7dfcf 0%, #f6f2ea 48%, #d8e8e7 100%);
+      font-family: "Microsoft YaHei UI", "Noto Sans SC", sans-serif;
+      padding: 34px;
+    }
+    header {
+      max-width: 1180px;
+      margin: 0 auto 26px;
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 34px;
+      letter-spacing: 0;
+      line-height: 1.08;
+    }
+    .subtitle {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+    .tag {
+      border: 1px solid rgba(20,21,19,.35);
+      padding: 8px 12px;
+      font-size: 13px;
+      background: rgba(255,255,255,.45);
+    }
+    .grid {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+    }
+    .option {
+      border: 2px solid rgba(20,21,19,.18);
+      background: rgba(255,255,255,.58);
+      padding: 14px;
+      cursor: pointer;
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+    .option:hover {
+      transform: translateY(-3px);
+      border-color: rgba(20,21,19,.7);
+      box-shadow: 0 18px 45px rgba(42,37,25,.16);
+    }
+    .phone {
+      aspect-ratio: 9 / 16;
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid rgba(20,21,19,.75);
+      background: #111;
+    }
+    .body { padding: 22px; position: absolute; inset: 0; }
+    .series {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+    }
+    .author {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .big-title {
+      font-size: clamp(25px, 3.2vw, 40px);
+      line-height: 1.02;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+    .content {
+      font-size: 13px;
+      line-height: 1.62;
+    }
+    .narration {
+      position: absolute;
+      left: 22px;
+      right: 22px;
+      bottom: 34px;
+      min-height: 92px;
+      padding: 13px 14px;
+      font-size: 18px;
+      line-height: 1.35;
+      font-weight: 800;
+    }
+    .a .phone {
+      background:
+        linear-gradient(rgba(20,21,19,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(20,21,19,.04) 1px, transparent 1px),
+        #f7f1e4;
+      background-size: 22px 22px;
+    }
+    .a .body { color: #151611; }
+    .a .big-title {
+      margin-top: 88px;
+      max-width: 76%;
+      font-family: Georgia, "Microsoft YaHei UI", serif;
+    }
+    .a .equation {
+      margin-top: 22px;
+      border-left: 4px solid var(--red);
+      padding-left: 12px;
+      font-family: Consolas, monospace;
+      color: #29322e;
+    }
+    .a .panel {
+      position: absolute;
+      right: 20px;
+      top: 270px;
+      width: 42%;
+      padding: 12px;
+      border: 1px solid #1d1d19;
+      background: var(--acid);
+      font-family: Consolas, monospace;
+      font-size: 11px;
+      transform: rotate(2deg);
+    }
+    .a .narration {
+      background: #151611;
+      color: #fff9eb;
+      border-left: 8px solid var(--acid);
+    }
+    .b .phone {
+      background:
+        radial-gradient(circle at 50% 18%, rgba(89,199,255,.3), transparent 28%),
+        linear-gradient(180deg, #0b1020 0%, #11151f 60%, #050607 100%);
+      color: #eaf7ff;
+    }
+    .b .series { color: var(--blue); }
+    .b .big-title {
+      margin-top: 76px;
+      font-family: "Trebuchet MS", "Microsoft YaHei UI", sans-serif;
+      text-transform: uppercase;
+      color: #f6fbff;
+      text-shadow: 0 0 22px rgba(89,199,255,.38);
+    }
+    .b .scan {
+      position: absolute;
+      inset: 245px 24px auto;
+      height: 170px;
+      border: 1px solid rgba(89,199,255,.65);
+      background:
+        linear-gradient(120deg, transparent 0 45%, rgba(89,199,255,.24) 45% 48%, transparent 48%),
+        repeating-linear-gradient(0deg, rgba(255,255,255,.08) 0 1px, transparent 1px 11px);
+      padding: 14px;
+      font-family: Consolas, monospace;
+      color: #9be4ff;
+      font-size: 11px;
+    }
+    .b .narration {
+      background: rgba(234,247,255,.92);
+      color: #0b1020;
+      border: 1px solid rgba(89,199,255,.7);
+      box-shadow: 0 0 28px rgba(89,199,255,.22);
+    }
+    .c .phone {
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.12) 0 1px, transparent 1px),
+        #f3eee2;
+      background-size: 28px 100%;
+      color: #1f1b17;
+    }
+    .c .big-title {
+      margin-top: 60px;
+      width: 78%;
+      font-size: clamp(28px, 3.6vw, 44px);
+      font-family: "Times New Roman", "Microsoft YaHei UI", serif;
+    }
+    .c .cover-img {
+      position: absolute;
+      right: -24px;
+      top: 168px;
+      width: 58%;
+      height: 250px;
+      background:
+        radial-gradient(circle at 50% 30%, #ff7b62 0 12%, transparent 13%),
+        linear-gradient(135deg, #1b1a18, #45585b 48%, #d7ff62 49%, #f6f0df);
+      clip-path: polygon(12% 0, 100% 8%, 90% 100%, 0 82%);
+      border: 2px solid #1f1b17;
+    }
+    .c .content {
+      position: absolute;
+      left: 24px;
+      top: 360px;
+      width: 50%;
+      font-family: Consolas, monospace;
+    }
+    .c .narration {
+      background: #fffaf0;
+      color: #1f1b17;
+      border: 2px solid #1f1b17;
+      box-shadow: 7px 7px 0 #c8ff3d;
+    }
+    .card-title {
+      margin: 14px 2px 4px;
+      font-size: 17px;
+      font-weight: 900;
+    }
+    .card-copy {
+      margin: 0 2px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    @media (max-width: 980px) {
+      body { padding: 18px; }
+      header { display: block; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>“反焦虑”竖版模板方向</h1>
+      <p class="subtitle">请选择一个视觉基调：后面我会基于它做正式 HTML 模板、封面结构、可配置参数。</p>
+    </div>
+    <div class="tag">主题：懂代码的焦虑康复者 × 理科拆解情绪问题</div>
+  </header>
+
+  <main class="grid">
+    <section class="option a" data-choice="a" onclick="toggleSelect(this)">
+      <div class="phone">
+        <div class="body">
+          <div class="series">反焦虑</div>
+          <div class="author">@keep alive</div>
+          <div class="big-title">把焦虑<br>当成一个<br>可调试系统</div>
+          <div class="equation">anxiety ≠ danger<br>anxiety = signal + prediction error</div>
+          <div class="panel">if mind.loop():<br>&nbsp;&nbsp;print("observe")<br>&nbsp;&nbsp;break()</div>
+          <div class="narration">焦虑不是你坏掉了，而是大脑的报警阈值被调得太敏感。</div>
+        </div>
+      </div>
+      <h3 class="card-title">A. 实验室手账</h3>
+      <p class="card-copy">纸张、网格、公式、代码批注。更像一个理科生把情绪问题拆在白板上，亲近但不廉价。</p>
+    </section>
+
+    <section class="option b" data-choice="b" onclick="toggleSelect(this)">
+      <div class="phone">
+        <div class="body">
+          <div class="series">反焦虑</div>
+          <div class="author">@keep alive</div>
+          <div class="big-title">ANXIETY<br>DEBUG<br>MODE</div>
+          <div class="scan">COGNITIVE TRACE<br>01 trigger detected<br>02 body alarm rising<br>03 verify evidence<br>04 choose next action</div>
+          <div class="narration">先别急着消灭情绪，先把它从“事实”还原成“信号”。</div>
+        </div>
+      </div>
+      <h3 class="card-title">B. 神经调试终端</h3>
+      <p class="card-copy">深色、扫描线、系统日志。更酷、更强视觉记忆点，适合“代码/理科”身份强一点的视频系列。</p>
+    </section>
+
+    <section class="option c" data-choice="c" onclick="toggleSelect(this)">
+      <div class="phone">
+        <div class="body">
+          <div class="series">反焦虑</div>
+          <div class="author">@keep alive</div>
+          <div class="big-title">情绪不是敌人<br>它是一段<br>需要重构的逻辑</div>
+          <div class="cover-img"></div>
+          <div class="content">title: 反焦虑<br>topic: cognitive repair<br>method: observe / label / act</div>
+          <div class="narration">当你能给情绪命名，它就从洪水变成了一条可以测量的河。</div>
+        </div>
+      </div>
+      <h3 class="card-title">C. 编辑部封面感</h3>
+      <p class="card-copy">杂志排版、醒目标题、抽象封面图。适合做系列号召力，封面感强，但代码气质会更克制。</p>
+    </section>
+  </main>
+</body>
+</html>

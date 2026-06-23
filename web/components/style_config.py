@@ -359,7 +359,7 @@ def render_style_config(pixelle_video):
         type_default_templates = {
             'static': '1080x1920/static_default.html',
             'image': '1080x1920/image_default.html',
-            'video': '1080x1920/video_default.html',
+            'video': '1080x1920/video_anti_anxiety_bamboo_peach.html',
         }
         type_specific_default = type_default_templates.get(selected_template_type, config_default_template)
         

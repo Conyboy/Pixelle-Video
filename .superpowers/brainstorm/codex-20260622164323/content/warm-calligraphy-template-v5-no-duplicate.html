@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>反焦虑中国风模板 v5</title>
+  <style>
+    :root {
+      --xuan: #f7f0e3;
+      --ink: #241d17;
+      --ink-soft: #6b5d4e;
+      --pine: #4f654d;
+      --seal: #b23f31;
+      --gold: #d4a654;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 17% 12%, rgba(212,166,84,.25), transparent 22%),
+        radial-gradient(circle at 80% 24%, rgba(79,101,77,.16), transparent 25%),
+        linear-gradient(135deg, #eadbc6 0%, #fbf5ea 48%, #e3eadc 100%);
+      font-family: "LXGW WenKai", "STKaiti", "KaiTi", "Kaiti SC", "Microsoft YaHei UI", serif;
+      padding: 30px;
+    }
+    .page { max-width: 1230px; margin: 0 auto; }
+    .top {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 30px;
+      margin-bottom: 24px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 39px;
+      line-height: 1.08;
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+    .hint {
+      margin: 10px 0 0;
+      color: var(--ink-soft);
+      font-size: 16px;
+      line-height: 1.7;
+      font-family: "Microsoft YaHei UI", sans-serif;
+    }
+    .seal {
+      width: 82px;
+      height: 82px;
+      border: 2px solid var(--seal);
+      color: var(--seal);
+      display: grid;
+      place-items: center;
+      line-height: 1.04;
+      font-size: 19px;
+      font-weight: 800;
+      background: rgba(255,255,255,.32);
+      transform: rotate(-4deg);
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 26px;
+      align-items: start;
+    }
+    .sheet {
+      padding: 16px;
+      border: 1px solid rgba(36,29,23,.22);
+      background:
+        radial-gradient(circle at 18% 20%, rgba(255,255,255,.55), transparent 30%),
+        linear-gradient(90deg, rgba(36,29,23,.032) 1px, transparent 1px),
+        var(--xuan);
+      background-size: auto, 30px 30px, auto;
+      box-shadow: 0 24px 70px rgba(86, 66, 40, .18);
+      cursor: pointer;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .sheet:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 30px 82px rgba(86, 66, 40, .25);
+    }
+    .phone {
+      aspect-ratio: 9 / 16;
+      width: min(100%, 410px);
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(36,29,23,.45);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,0) 35%),
+        radial-gradient(circle at 54% 16%, rgba(212,166,84,.28), transparent 18%),
+        linear-gradient(180deg, #fbf3e6 0%, #f3e8d7 64%, #e7dac4 100%);
+    }
+    .phone:before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(rgba(36,29,23,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(36,29,23,.018) 1px, transparent 1px);
+      background-size: 25px 25px;
+      pointer-events: none;
+    }
+    .bamboo {
+      position: absolute;
+      top: 74px;
+      right: -12px;
+      width: 110px;
+      height: 360px;
+      opacity: .34;
+      background:
+        linear-gradient(90deg, transparent 34px, rgba(79,101,77,.48) 36px 40px, transparent 42px),
+        radial-gradient(ellipse at 20% 18%, transparent 0 36%, rgba(79,101,77,.38) 37% 42%, transparent 43%),
+        radial-gradient(ellipse at 68% 36%, transparent 0 36%, rgba(79,101,77,.34) 37% 42%, transparent 43%),
+        radial-gradient(ellipse at 20% 58%, transparent 0 36%, rgba(79,101,77,.32) 37% 42%, transparent 43%);
+      transform: rotate(7deg);
+    }
+    .mountains {
+      position: absolute;
+      left: -24px;
+      right: -24px;
+      bottom: 0;
+      height: 235px;
+      opacity: .22;
+      background:
+        linear-gradient(145deg, transparent 0 48%, rgba(36,29,23,.32) 49% 52%, transparent 53%),
+        linear-gradient(35deg, transparent 0 51%, rgba(79,101,77,.34) 52% 55%, transparent 56%),
+        linear-gradient(12deg, transparent 0 58%, rgba(36,29,23,.25) 59% 61%, transparent 62%);
+    }
+    .series {
+      position: absolute;
+      top: 28px;
+      left: 25px;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      font-size: 23px;
+      letter-spacing: .18em;
+      color: var(--seal);
+      font-weight: 800;
+    }
+    .author {
+      position: absolute;
+      top: 27px;
+      right: 25px;
+      font-size: 16px;
+      color: var(--pine);
+      font-family: "Microsoft YaHei UI", sans-serif;
+      font-weight: 800;
+    }
+    .cover-art {
+      position: absolute;
+      top: 108px;
+      left: 58px;
+      right: 38px;
+      height: 248px;
+    }
+    .ink-circle {
+      position: absolute;
+      inset: 0;
+      border-radius: 48% 52% 43% 57%;
+      background:
+        radial-gradient(circle at 51% 45%, rgba(255,255,255,.78) 0 8%, transparent 9%),
+        radial-gradient(circle at 49% 46%, rgba(36,29,23,.72) 0 17%, transparent 18%),
+        radial-gradient(circle at 51% 46%, rgba(178,63,49,.62) 0 25%, transparent 26%),
+        radial-gradient(circle at 53% 48%, rgba(79,101,77,.55) 0 39%, transparent 40%),
+        radial-gradient(circle at 53% 50%, rgba(212,166,84,.62), transparent 58%);
+      opacity: .94;
+    }
+    .ink-stroke {
+      position: absolute;
+      height: 3px;
+      background: rgba(36,29,23,.46);
+      border-radius: 50%;
+      transform-origin: center;
+    }
+    .stroke-1 { width: 198px; left: 22px; top: 132px; transform: rotate(-23deg); }
+    .stroke-2 { width: 142px; right: 10px; top: 86px; transform: rotate(35deg); background: rgba(79,101,77,.45); }
+    .cover-title {
+      position: absolute;
+      left: 34px;
+      right: 34px;
+      top: 362px;
+      font-size: 49px;
+      line-height: 1.05;
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+    .cover-title strong { color: var(--seal); font-weight: 800; }
+    .cover-copy {
+      position: absolute;
+      left: 38px;
+      right: 38px;
+      top: 522px;
+      color: var(--ink-soft);
+      font-size: 18px;
+      line-height: 1.72;
+      font-family: "Microsoft YaHei UI", sans-serif;
+    }
+    .small-seal {
+      position: absolute;
+      right: 36px;
+      bottom: 46px;
+      width: 54px;
+      height: 54px;
+      border: 2px solid var(--seal);
+      color: var(--seal);
+      display: grid;
+      place-items: center;
+      line-height: 1.05;
+      font-size: 14px;
+      font-weight: 800;
+      background: rgba(255,255,255,.28);
+      transform: rotate(4deg);
+    }
+    .content-head {
+      position: absolute;
+      left: 38px;
+      right: 34px;
+      top: 86px;
+      min-height: 124px;
+      border-bottom: 1px solid rgba(36,29,23,.14);
+      padding-bottom: 18px;
+    }
+    .content-title {
+      margin: 0;
+      padding-left: 56px;
+      font-size: 38px;
+      line-height: 1.15;
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+    .content-title .num {
+      position: absolute;
+      left: 0;
+      top: 2px;
+      color: var(--seal);
+      font-weight: 800;
+      font-size: 34px;
+      line-height: 1;
+    }
+    .content-tag {
+      margin-top: 12px;
+      padding-left: 58px;
+      color: var(--ink-soft);
+      font-family: "Microsoft YaHei UI", sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    .text-card {
+      position: absolute;
+      top: 238px;
+      left: 34px;
+      right: 42px;
+      padding: 18px 19px 17px;
+      background: rgba(255,250,240,.76);
+      border-left: 5px solid var(--pine);
+      color: var(--ink-soft);
+      font-family: "Microsoft YaHei UI", sans-serif;
+      font-size: 17px;
+      line-height: 1.86;
+    }
+    .method {
+      position: absolute;
+      top: 418px;
+      left: 42px;
+      right: 42px;
+      padding: 15px 18px;
+      background: rgba(219,229,209,.76);
+      border: 1px solid rgba(79,101,77,.28);
+      color: #4c6147;
+      font-size: 20px;
+      line-height: 1.78;
+    }
+    .method span { color: var(--seal); font-weight: 800; }
+    .narration {
+      position: absolute;
+      left: 30px;
+      right: 30px;
+      bottom: 32px;
+      min-height: 114px;
+      padding: 18px 20px;
+      background: rgba(36,29,23,.88);
+      color: #fff8ed;
+      font-size: 25px;
+      line-height: 1.42;
+      font-weight: 500;
+      box-shadow: 0 12px 34px rgba(36,29,23,.20);
+    }
+    .narration:before {
+      content: "旁白";
+      position: absolute;
+      top: -27px;
+      left: 0;
+      color: var(--seal);
+      font-size: 17px;
+      font-family: "Microsoft YaHei UI", sans-serif;
+      font-weight: 800;
+    }
+    .caption {
+      margin: 14px 2px 0;
+      color: var(--ink-soft);
+      font-family: "Microsoft YaHei UI", sans-serif;
+      font-size: 14px;
+      line-height: 1.62;
+    }
+    .caption b { color: var(--ink); font-size: 17px; }
+    @media (max-width: 980px) {
+      body { padding: 18px; }
+      .top { display: block; }
+      .layout { grid-template-columns: 1fr; }
+      h1 { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="top">
+      <div>
+        <h1>中国风温暖版：反焦虑模板</h1>
+        <p class="hint">修正重复“反焦虑”：内容页只保留页面左上角系列题签，标题区不再重复。</p>
+      </div>
+      <div class="seal">反<br>焦<br>虑</div>
+    </section>
+
+    <section class="layout">
+      <article class="sheet" data-choice="cover-v5" onclick="toggleSelect(this)">
+        <div class="phone">
+          <div class="bamboo"></div>
+          <div class="mountains"></div>
+          <div class="series">反焦虑</div>
+          <div class="author">@keep alive</div>
+          <div class="cover-art">
+            <div class="ink-circle"></div>
+            <div class="ink-stroke stroke-1"></div>
+            <div class="ink-stroke stroke-2"></div>
+          </div>
+          <div class="cover-title">把焦虑<br><strong>慢慢看清</strong></div>
+          <div class="cover-copy">一个懂代码的焦虑康复者，用理科思维拆解情绪问题。</div>
+          <div class="small-seal">慢<br>慢<br>来</div>
+        </div>
+        <p class="caption"><b>封面页</b><br>保留系列题签和博主名，整体气质继续走宣纸、水墨、朱砂印。</p>
+      </article>
+
+      <article class="sheet" data-choice="content-v5" onclick="toggleSelect(this)">
+        <div class="phone">
+          <div class="bamboo"></div>
+          <div class="mountains"></div>
+          <div class="series">反焦虑</div>
+          <div class="author">@keep alive</div>
+
+          <div class="content-head">
+            <h2 class="content-title"><span class="num">01</span>先把感受<br>从事实里分离出来</h2>
+            <div class="content-tag">今天这段内容，我们不急着劝自己“别焦虑”。先像整理一段复杂逻辑一样，看见它在哪里触发。</div>
+          </div>
+
+          <div class="text-card">焦虑来的时候，不用立刻对抗它。先把它放回“信号”而不是“结论”的位置，再决定下一步。</div>
+          <div class="method"><span>观其来处</span> → 命其名字 → 验其证据 → 行其一步</div>
+          <div class="narration">焦虑来的时候，先不要和它争辩。你只需要轻轻说一句：我注意到它来了。</div>
+        </div>
+        <p class="caption"><b>内容页</b><br>只保留一个“反焦虑”系列题签；标题区只负责本段标题和引导内容。</p>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

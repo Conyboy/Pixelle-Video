@@ -96,4 +96,4 @@ template:
   #   - 1080x1080 (square): image_minimal_framed.html, etc.
   #   - 1920x1080 (horizontal/landscape): image_film.html, image_full.html, etc.
   # See templates/ directory for all available templates
-  default_template: "1080x1920/video_default.html"
+  default_template: "1080x1920/video_anti_anxiety_bamboo_peach.html"

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>反焦虑温暖书法版模板</title>
+  <style>
+    :root {
+      --paper: #f6efe2;
+      --paper-deep: #eadcc7;
+      --ink: #2b241d;
+      --soft-ink: #6f6254;
+      --tea: #697c62;
+      --tea-light: #dfe8d6;
+      --cinnabar: #b34c38;
+      --sun: #f1c982;
+      --line: rgba(43, 36, 29, .18);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 15% 12%, rgba(241, 201, 130, .36), transparent 24%),
+        radial-gradient(circle at 83% 22%, rgba(105, 124, 98, .20), transparent 27%),
+        linear-gradient(135deg, #eee0cc 0%, #fbf5eb 46%, #e6efe2 100%);
+      font-family: "LXGW WenKai", "STKaiti", "KaiTi", "Kaiti SC", "Microsoft YaHei UI", serif;
+      padding: 30px;
+    }
+    .page {
+      max-width: 1220px;
+      margin: 0 auto;
+    }
+    .top {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 28px;
+      margin-bottom: 24px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 38px;
+      line-height: 1.08;
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+    .hint {
+      margin: 10px 0 0;
+      color: var(--soft-ink);
+      font-size: 16px;
+      line-height: 1.7;
+      font-family: "Microsoft YaHei UI", sans-serif;
+    }
+    .stamp {
+      width: 78px;
+      height: 78px;
+      border: 2px solid var(--cinnabar);
+      color: var(--cinnabar);
+      display: grid;
+      place-items: center;
+      line-height: 1.05;
+      font-size: 19px;
+      font-weight: 700;
+      transform: rotate(-5deg);
+      background: rgba(255, 255, 255, .35);
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 26px;
+      align-items: start;
+    }
+    .sheet {
+      border: 1px solid rgba(43, 36, 29, .22);
+      background:
+        linear-gradient(90deg, rgba(43, 36, 29, .035) 1px, transparent 1px),
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,.55), transparent 30%),
+        var(--paper);
+      background-size: 28px 28px, auto, auto;
+      padding: 16px;
+      box-shadow: 0 24px 70px rgba(81, 63, 42, .18);
+      cursor: pointer;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .sheet:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 30px 80px rgba(81, 63, 42, .24);
+    }
+    .phone {
+      aspect-ratio: 9 / 16;
+      width: min(100%, 410px);
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(43, 36, 29, .45);
+      background:
+        radial-gradient(circle at 50% 23%, rgba(241,201,130,.42), transparent 19%),
+        radial-gradient(circle at 82% 64%, rgba(105,124,98,.20), transparent 24%),
+        linear-gradient(180deg, #fbf3e6 0%, #f4eadb 62%, #e9deca 100%);
+    }
+    .phone:before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(43,36,29,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(43,36,29,.025) 1px, transparent 1px);
+      background-size: 24px 24px;
+      mask-image: linear-gradient(180deg, rgba(0,0,0,.82), rgba(0,0,0,.3));
+      pointer-events: none;
+    }
+    .vertical-series {
+      position: absolute;
+      top: 28px;
+      left: 24px;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      font-size: 22px;
+      letter-spacing: .16em;
+      color: var(--cinnabar);
+      font-weight: 700;
+    }
+    .author {
+      position: absolute;
+      top: 26px;
+      right: 24px;
+      font-size: 16px;
+      color: var(--tea);
+      font-family: "Microsoft YaHei UI", sans-serif;
+      font-weight: 700;
+    }
+    .cover-art {
+      position: absolute;
+      top: 104px;
+      left: 60px;
+      right: 34px;
+      height: 250px;
+      border-radius: 50% 46% 42% 54%;
+      background:
+        radial-gradient(circle at 45% 43%, rgba(255,255,255,.7) 0 4%, transparent 5%),
+        radial-gradient(circle at 42% 44%, #2b241d 0 16%, transparent 17%),
+        radial-gradient(circle at 45% 42%, rgba(179,76,56,.75) 0 23%, transparent 24%),
+        radial-gradient(circle at 50% 48%, rgba(105,124,98,.64) 0 36%, transparent 37%),
+        radial-gradient(circle at 52% 52%, rgba(241,201,130,.65), transparent 56%);
+      filter: saturate(.92);
+      opacity: .94;
+    }
+    .cover-art:before,
+    .cover-art:after {
+      content: "";
+      position: absolute;
+      background: rgba(43,36,29,.5);
+      transform-origin: left center;
+    }
+    .cover-art:before {
+      width: 190px;
+      height: 2px;
+      left: 34px;
+      top: 126px;
+      transform: rotate(-24deg);
+    }
+    .cover-art:after {
+      width: 138px;
+      height: 2px;
+      right: 14px;
+      top: 92px;
+      transform: rotate(38deg);
+    }
+    .main-title {
+      position: absolute;
+      left: 34px;
+      right: 34px;
+      top: 365px;
+      font-size: 49px;
+      line-height: 1.04;
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+    .main-title strong {
+      color: var(--cinnabar);
+      font-weight: 700;
+    }
+    .subline {
+      position: absolute;
+      left: 38px;
+      right: 38px;
+      top: 522px;
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--soft-ink);
+      font-family: "Microsoft YaHei UI", sans-serif;
+    }
+    .seal-small {
+      position: absolute;
+      right: 36px;
+      bottom: 46px;
+      width: 54px;
+      height: 54px;
+      border: 2px solid var(--cinnabar);
+      color: var(--cinnabar);
+      display: grid;
+      place-items: center;
+      font-size: 14px;
+      line-height: 1.05;
+      transform: rotate(4deg);
+      background: rgba(255,255,255,.28);
+    }
+    .content-title {
+      position: absolute;
+      top: 80px;
+      left: 42px;
+      right: 32px;
+      font-size: 38px;
+      line-height: 1.14;
+      font-weight: 500;
+    }
+    .content-title .mark {
+      display: inline-block;
+      color: var(--cinnabar);
+      transform: rotate(-4deg);
+    }
+    .thought-card {
+      position: absolute;
+      top: 220px;
+      left: 36px;
+      right: 36px;
+      padding: 18px 18px 16px;
+      border-left: 4px solid var(--tea);
+      background: rgba(255, 250, 240, .72);
+      color: var(--soft-ink);
+      font-size: 17px;
+      line-height: 1.85;
+      font-family: "Microsoft YaHei UI", sans-serif;
+    }
+    .soft-code {
+      position: absolute;
+      top: 390px;
+      left: 42px;
+      right: 42px;
+      padding: 15px 16px;
+      background: rgba(223,232,214,.72);
+      border: 1px solid rgba(105,124,98,.26);
+      color: #4f6148;
+      font-family: "LXGW WenKai", "STKaiti", "KaiTi", serif;
+      font-size: 18px;
+      line-height: 1.75;
+    }
+    .narration {
+      position: absolute;
+      left: 30px;
+      right: 30px;
+      bottom: 32px;
+      min-height: 114px;
+      padding: 18px 20px;
+      background: rgba(43, 36, 29, .88);
+      color: #fff8ed;
+      font-size: 25px;
+      line-height: 1.42;
+      font-weight: 500;
+      box-shadow: 0 12px 34px rgba(43,36,29,.20);
+    }
+    .narration:before {
+      content: "旁白";
+      position: absolute;
+      top: -26px;
+      left: 0;
+      color: var(--cinnabar);
+      font-size: 17px;
+      font-family: "Microsoft YaHei UI", sans-serif;
+      font-weight: 700;
+    }
+    .caption {
+      margin: 14px 2px 0;
+      font-family: "Microsoft YaHei UI", sans-serif;
+      color: var(--soft-ink);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+    .caption b {
+      color: var(--ink);
+      font-size: 17px;
+    }
+    @media (max-width: 980px) {
+      body { padding: 18px; }
+      .top { display: block; }
+      .layout { grid-template-columns: 1fr; }
+      h1 { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="top">
+      <div>
+        <h1>温暖书法版：反焦虑模板</h1>
+        <p class="hint">把“理科拆解”藏在纸本结构里，用书法标题、印章、手札和柔和注释承接情绪主题。</p>
+      </div>
+      <div class="stamp">反<br>焦<br>虑</div>
+    </section>
+
+    <section class="layout">
+      <article class="sheet" data-choice="cover" onclick="toggleSelect(this)">
+        <div class="phone">
+          <div class="vertical-series">反焦虑</div>
+          <div class="author">@keep alive</div>
+          <div class="cover-art"></div>
+          <div class="main-title">焦虑不是敌人<br><strong>它是提醒</strong></div>
+          <div class="subline">一个懂代码的焦虑康复者，用理科思维拆解情绪问题。</div>
+          <div class="seal-small">慢<br>慢<br>来</div>
+        </div>
+        <p class="caption"><b>封面页</b><br>顶部保留系列和博主名，中间是一张温暖抽象图，主标题由 AI 生成，适合做第一帧封面。</p>
+      </article>
+
+      <article class="sheet" data-choice="content" onclick="toggleSelect(this)">
+        <div class="phone">
+          <div class="vertical-series">反焦虑</div>
+          <div class="author">@keep alive</div>
+          <div class="content-title"><span class="mark">01</span> 先把感受<br>从事实里分离出来</div>
+          <div class="thought-card">今天这段内容，我们不急着劝自己“别焦虑”。先像调试程序一样，观察它在哪里触发。</div>
+          <div class="soft-code">观察 → 命名 → 验证 → 行动<br>不是压下去，而是看清楚。</div>
+          <div class="narration">焦虑来的时候，先不要和它争辩。你只需要轻轻说一句：我注意到它来了。</div>
+        </div>
+        <p class="caption"><b>内容页</b><br>标题在上，正文解释在中，旁白固定在底部。空白处用温柔流程词补足，避免画面空但不压迫。</p>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

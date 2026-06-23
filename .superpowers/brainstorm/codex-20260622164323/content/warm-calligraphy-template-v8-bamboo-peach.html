@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>中国风温暖版模板 v8</title>
+  <style>
+    :root {
+      --paper: #f8f1e6;
+      --ink: #241e18;
+      --ink-soft: #6c5f50;
+      --pine: #51684f;
+      --seal: #b64031;
+      --peach: #d87b76;
+      --peach-soft: rgba(216, 123, 118, .52);
+      --white: rgba(255, 250, 241, .78);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 30px;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 18% 10%, rgba(213,167,90,.26), transparent 24%),
+        radial-gradient(circle at 82% 24%, rgba(81,104,79,.16), transparent 26%),
+        linear-gradient(135deg, #eadbc6 0%, #fbf5ea 48%, #e3eadc 100%);
+      font-family: "LXGW WenKai", "STKaiti", "KaiTi", "Kaiti SC", "Microsoft YaHei UI", serif;
+    }
+    .page { max-width: 1240px; margin: 0 auto; }
+    .top {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 28px;
+      margin-bottom: 24px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 38px;
+      line-height: 1.1;
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+    .hint {
+      margin: 10px 0 0;
+      color: var(--ink-soft);
+      font: 15px/1.75 "Microsoft YaHei UI", sans-serif;
+    }
+    .seal {
+      width: 82px;
+      height: 82px;
+      border: 2px solid var(--seal);
+      color: var(--seal);
+      display: grid;
+      place-items: center;
+      line-height: 1.04;
+      font-size: 19px;
+      font-weight: 800;
+      background: rgba(255,255,255,.34);
+      transform: rotate(-4deg);
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 26px;
+      align-items: start;
+    }
+    .sheet {
+      padding: 16px;
+      border: 1px solid rgba(36,30,24,.22);
+      background:
+        radial-gradient(circle at 18% 20%, rgba(255,255,255,.55), transparent 30%),
+        linear-gradient(90deg, rgba(36,30,24,.032) 1px, transparent 1px),
+        var(--paper);
+      background-size: auto, 30px 30px, auto;
+      box-shadow: 0 24px 70px rgba(86,66,40,.18);
+      cursor: pointer;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .sheet:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 30px 82px rgba(86,66,40,.25);
+    }
+    .phone {
+      aspect-ratio: 9 / 16;
+      width: min(100%, 410px);
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(36,30,24,.45);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.58), rgba(255,255,255,0) 36%),
+        radial-gradient(circle at 54% 16%, rgba(213,167,90,.28), transparent 18%),
+        linear-gradient(180deg, #fbf3e6 0%, #f3e8d7 64%, #e7dac4 100%);
+    }
+    .phone:before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(rgba(36,30,24,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(36,30,24,.018) 1px, transparent 1px);
+      background-size: 25px 25px;
+      pointer-events: none;
+    }
+    .bamboo {
+      position: absolute;
+      top: 82px;
+      right: -22px;
+      width: 146px;
+      height: 430px;
+      opacity: .32;
+      transform: rotate(6deg);
+      pointer-events: none;
+    }
+    .bamboo:before,
+    .bamboo:after {
+      content: "";
+      position: absolute;
+      width: 5px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(81,104,79,.35), rgba(81,104,79,.78), rgba(81,104,79,.28));
+      box-shadow:
+        0 86px 0 -1px rgba(81,104,79,.62),
+        0 172px 0 -1px rgba(81,104,79,.54),
+        0 258px 0 -1px rgba(81,104,79,.48);
+    }
+    .bamboo:before {
+      left: 56px;
+      top: 8px;
+      height: 384px;
+      transform: rotate(2deg);
+    }
+    .bamboo:after {
+      left: 92px;
+      top: 0;
+      height: 410px;
+      transform: rotate(-7deg);
+      opacity: .72;
+    }
+    .leaf {
+      position: absolute;
+      width: 78px;
+      height: 22px;
+      border-radius: 100% 0 100% 0;
+      background: rgba(81,104,79,.54);
+      transform-origin: left center;
+    }
+    .leaf.l1 { left: 54px; top: 74px; transform: rotate(-28deg); }
+    .leaf.l2 { left: 68px; top: 132px; transform: rotate(24deg) scale(.88); }
+    .leaf.l3 { left: 44px; top: 210px; transform: rotate(-36deg) scale(.74); }
+    .leaf.l4 { left: 82px; top: 286px; transform: rotate(21deg) scale(.82); }
+    .peach-branch {
+      position: absolute;
+      left: 30px;
+      right: 34px;
+      bottom: 56px;
+      height: 148px;
+      opacity: .22;
+      transform: rotate(-7deg);
+      pointer-events: none;
+    }
+    .peach-branch:before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 78px;
+      width: 100%;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(95,75,52,.32);
+      transform: rotate(10deg);
+    }
+    .twig {
+      position: absolute;
+      width: 92px;
+      height: 3px;
+      border-radius: 999px;
+      background: rgba(95,75,52,.30);
+      transform-origin: left center;
+    }
+    .twig.t1 { left: 142px; top: 72px; transform: rotate(-36deg); }
+    .twig.t2 { left: 238px; top: 90px; transform: rotate(31deg); }
+    .blossom {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,240,222,.9) 0 20%, transparent 21%),
+        radial-gradient(circle at 50% 18%, var(--peach-soft) 0 24%, transparent 25%),
+        radial-gradient(circle at 82% 48%, var(--peach-soft) 0 24%, transparent 25%),
+        radial-gradient(circle at 50% 82%, var(--peach-soft) 0 24%, transparent 25%),
+        radial-gradient(circle at 18% 48%, var(--peach-soft) 0 24%, transparent 25%);
+    }
+    .blossom.b1 { left: 122px; top: 48px; }
+    .blossom.b2 { left: 224px; top: 112px; transform: scale(.82); }
+    .blossom.b3 { left: 314px; top: 58px; transform: scale(.72); }
+    .blossom.b4 { left: 366px; top: 102px; transform: scale(.68); }
+    .mountains {
+      position: absolute;
+      left: -24px;
+      right: -24px;
+      bottom: 0;
+      height: 230px;
+      opacity: .13;
+      background:
+        linear-gradient(145deg, transparent 0 48%, rgba(36,30,24,.32) 49% 52%, transparent 53%),
+        linear-gradient(35deg, transparent 0 51%, rgba(81,104,79,.34) 52% 55%, transparent 56%),
+        linear-gradient(12deg, transparent 0 58%, rgba(36,30,24,.25) 59% 61%, transparent 62%);
+    }
+    .series {
+      position: absolute;
+      top: 28px;
+      left: 25px;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      font-size: 23px;
+      letter-spacing: .18em;
+      color: var(--seal);
+      font-weight: 800;
+    }
+    .author {
+      position: absolute;
+      top: 27px;
+      right: 25px;
+      font: 800 16px/1 "Microsoft YaHei UI", sans-serif;
+      color: var(--pine);
+    }
+    .cover-art {
+      position: absolute;
+      top: 108px;
+      left: 58px;
+      right: 38px;
+      height: 248px;
+    }
+    .ink-circle {
+      position: absolute;
+      inset: 0;
+      border-radius: 48% 52% 43% 57%;
+      background:
+        radial-gradient(circle at 51% 45%, rgba(255,255,255,.78) 0 8%, transparent 9%),
+        radial-gradient(circle at 49% 46%, rgba(36,30,24,.72) 0 17%, transparent 18%),
+        radial-gradient(circle at 51% 46%, rgba(182,64,49,.62) 0 25%, transparent 26%),
+        radial-gradient(circle at 53% 48%, rgba(81,104,79,.55) 0 39%, transparent 40%),
+        radial-gradient(circle at 53% 50%, rgba(213,167,90,.62), transparent 58%);
+      opacity: .94;
+    }
+    .cover-title {
+      position: absolute;
+      left: 34px;
+      right: 34px;
+      top: 362px;
+      font-size: 49px;
+      line-height: 1.05;
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+    .cover-title strong { color: var(--seal); font-weight: 800; }
+    .cover-copy {
+      position: absolute;
+      left: 38px;
+      right: 38px;
+      top: 522px;
+      color: var(--ink-soft);
+      font: 18px/1.72 "Microsoft YaHei UI", sans-serif;
+    }
+    .small-seal {
+      position: absolute;
+      right: 36px;
+      bottom: 46px;
+      width: 54px;
+      height: 54px;
+      border: 2px solid var(--seal);
+      color: var(--seal);
+      display: grid;
+      place-items: center;
+      line-height: 1.05;
+      font-size: 14px;
+      font-weight: 800;
+      background: rgba(255,255,255,.28);
+      transform: rotate(4deg);
+    }
+    .content-head {
+      position: absolute;
+      left: 38px;
+      right: 34px;
+      top: 108px;
+      min-height: 138px;
+      padding: 0 0 18px 0;
+      border-bottom: 1px solid rgba(36,30,24,.14);
+    }
+    .content-title {
+      margin: 0;
+      padding-left: 58px;
+      font-size: 35px;
+      line-height: 1.18;
+      font-weight: 500;
+      letter-spacing: 0;
+      max-height: 92px;
+      overflow: hidden;
+    }
+    .content-title .num {
+      position: absolute;
+      left: 0;
+      top: 2px;
+      color: var(--seal);
+      font-weight: 800;
+      font-size: 33px;
+      line-height: 1;
+    }
+    .content-tag {
+      margin-top: 14px;
+      padding-left: 58px;
+      color: var(--ink-soft);
+      font: 15px/1.65 "Microsoft YaHei UI", sans-serif;
+      max-height: 50px;
+      overflow: hidden;
+    }
+    .text-card {
+      position: absolute;
+      top: 262px;
+      left: 34px;
+      right: 42px;
+      min-height: 128px;
+      max-height: 150px;
+      overflow: hidden;
+      padding: 18px 19px 17px;
+      background: var(--white);
+      border-left: 5px solid var(--pine);
+      color: var(--ink-soft);
+      font: 17px/1.86 "Microsoft YaHei UI", sans-serif;
+    }
+    .method {
+      position: absolute;
+      top: 440px;
+      left: 42px;
+      right: 42px;
+      min-height: 92px;
+      padding: 15px 18px;
+      background: rgba(219,229,209,.76);
+      border: 1px solid rgba(81,104,79,.28);
+      color: #4c6147;
+      font-size: 19px;
+      line-height: 1.78;
+      overflow: hidden;
+    }
+    .method span { color: var(--seal); font-weight: 800; }
+    .narration {
+      position: absolute;
+      left: 30px;
+      right: 30px;
+      bottom: 32px;
+      min-height: 114px;
+      max-height: 142px;
+      overflow: hidden;
+      padding: 18px 20px;
+      background: rgba(36,30,24,.88);
+      color: #fff8ed;
+      font-size: 25px;
+      line-height: 1.42;
+      font-weight: 500;
+      box-shadow: 0 12px 34px rgba(36,30,24,.20);
+    }
+    .narration:before {
+      content: "旁白";
+      position: absolute;
+      top: -27px;
+      left: 0;
+      color: var(--seal);
+      font: 800 17px/1 "Microsoft YaHei UI", sans-serif;
+    }
+    .caption {
+      margin: 14px 2px 0;
+      color: var(--ink-soft);
+      font: 14px/1.62 "Microsoft YaHei UI", sans-serif;
+    }
+    .caption b { color: var(--ink); font-size: 17px; }
+    @media (max-width: 980px) {
+      body { padding: 18px; }
+      .top { display: block; }
+      .layout { grid-template-columns: 1fr; }
+      h1 { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="top">
+      <div>
+        <h1>中国风温暖版：正式模板候选</h1>
+        <p class="hint">已把抽象线条换成竹影和桃花枝，保留原来的温暖留白和信息层级。</p>
+      </div>
+      <div class="seal">慢<br>慢<br>来</div>
+    </section>
+
+    <section class="layout">
+      <article class="sheet" data-choice="cover-v8" onclick="toggleSelect(this)">
+        <div class="phone">
+          <div class="bamboo">
+            <i class="leaf l1"></i><i class="leaf l2"></i><i class="leaf l3"></i><i class="leaf l4"></i>
+          </div>
+          <div class="mountains"></div>
+          <div class="peach-branch">
+            <i class="twig t1"></i><i class="twig t2"></i>
+            <i class="blossom b1"></i><i class="blossom b2"></i><i class="blossom b3"></i><i class="blossom b4"></i>
+          </div>
+          <div class="series">反焦虑</div>
+          <div class="author">@keep alive</div>
+          <div class="cover-art">
+            <div class="ink-circle"></div>
+          </div>
+          <div class="cover-title">把焦虑<br><strong>慢慢看清</strong></div>
+          <div class="cover-copy">一个懂代码的焦虑康复者，用理科思维拆解情绪问题。</div>
+          <div class="small-seal">慢<br>慢<br>来</div>
+        </div>
+        <p class="caption"><b>封面页</b><br>右侧是淡竹，底部是桃花枝；封面图留在中间，标题保持醒目。</p>
+      </article>
+
+      <article class="sheet" data-choice="content-v8" onclick="toggleSelect(this)">
+        <div class="phone">
+          <div class="bamboo">
+            <i class="leaf l1"></i><i class="leaf l2"></i><i class="leaf l3"></i><i class="leaf l4"></i>
+          </div>
+          <div class="mountains"></div>
+          <div class="peach-branch">
+            <i class="twig t1"></i><i class="twig t2"></i>
+            <i class="blossom b1"></i><i class="blossom b2"></i><i class="blossom b3"></i><i class="blossom b4"></i>
+          </div>
+          <div class="series">反焦虑</div>
+          <div class="author">@keep alive</div>
+
+          <div class="content-head">
+            <h2 class="content-title"><span class="num">01</span>先把感受<br>从事实里分离出来</h2>
+            <div class="content-tag">今天这段内容，我们不急着劝自己“别焦虑”。先像整理一段复杂逻辑一样，看见它在哪里触发。</div>
+          </div>
+
+          <div class="text-card">焦虑来的时候，不用立刻对抗它。先把它放回“信号”而不是“结论”的位置，再决定下一步。</div>
+          <div class="method"><span>观其来处</span> → 命其名字 → 验其证据 → 行其一步</div>
+          <div class="narration">焦虑来的时候，先不要和它争辩。你只需要轻轻说一句：我注意到它来了。</div>
+        </div>
+        <p class="caption"><b>内容页</b><br>竹桃只做低透明背景，不抢标题、正文和旁白的位置。</p>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

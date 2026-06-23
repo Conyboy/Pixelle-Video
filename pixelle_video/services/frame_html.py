@@ -306,6 +306,51 @@ class HTMLFrameGenerator:
         
         return re.sub(PARAM_PATTERN, replacer, html)
 
+    def _resolve_local_media_uri(self, media: str, *, warn_if_missing: bool = False) -> str:
+        """Convert an existing local media path to a file:// URI for browser rendering."""
+        if not media or media.startswith(('http://', 'https://', 'data:', 'file://')):
+            return media
+
+        media_path = Path(media)
+        if not media_path.is_absolute():
+            media_path = Path.cwd() / media
+
+        if not media_path.exists():
+            if warn_if_missing:
+                logger.warning(f"Media file not found: {media_path}")
+            return media
+
+        resolved = media_path.as_uri()
+        logger.debug(f"Converted media path to: {resolved}")
+        return resolved
+
+    def _build_template_context(
+        self,
+        title: str,
+        text: str,
+        image: str,
+        ext: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
+        """Build template values and normalize local media paths for browser access."""
+        context = {
+            "title": title,
+            "text": text,
+            "image": self._resolve_local_media_uri(image, warn_if_missing=True),
+        }
+
+        if ext:
+            context.update(ext)
+
+        if "background" not in context:
+            background_param = self.parse_template_parameters().get("background")
+            if background_param:
+                context["background"] = background_param.get("default", "")
+
+        if "background" in context:
+            context["background"] = self._resolve_local_media_uri(str(context["background"]))
+
+        return context
+
     @classmethod
     async def _ensure_browser(cls):
         """Lazily initialize a shared Playwright browser instance"""
@@ -402,25 +447,12 @@ class HTMLFrameGenerator:
         Returns:
             Path to generated frame image
         """
-        if image and not image.startswith(('http://', 'https://', 'data:', 'file://')):
-            image_path = Path(image)
-            if not image_path.is_absolute():
-                image_path = Path.cwd() / image
-            
-            if not image_path.exists():
-                logger.warning(f"Image file not found: {image_path}")
-            else:
-                image = image_path.as_uri()
-                logger.debug(f"Converted image path to: {image}")
-        
-        context = {
-            "title": title,
-            "text": text,
-            "image": image,
-        }
-        
-        if ext:
-            context.update(ext)
+        context = self._build_template_context(
+            title=title,
+            text=text,
+            image=image,
+            ext=ext,
+        )
         
         html = self._replace_parameters(self.template, context)
 
