@@ -2,10 +2,10 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="template:media-width" content="512">
-    <meta name="template:media-height" content="288">
+    <meta name="template:media-width" content="1024">
+    <meta name="template:media-height" content="576">
     <meta name="viewport" content="width=1080, height=1920">
-    <title>反焦虑竹桃视频模板 - 1080x1920</title>
+    <title>反焦虑书香视频模板 - 1080x1920</title>
     <style>
         * {
             box-sizing: border-box;
@@ -24,7 +24,7 @@
             position: relative;
             background: transparent;
             color: #241e18;
-            font-family: "LXGW WenKai", "STKaiti", "KaiTi", "Kaiti SC", "Microsoft YaHei UI", serif;
+            font-family: "Noto Serif CJK SC", "Noto Serif CJK", "Source Han Serif SC", "Songti SC", "SimSun", serif;
         }
 
         .main-container {
@@ -40,12 +40,40 @@
             pointer-events: none;
         }
 
+        .background-top,
+        .background-bottom {
+            position: absolute;
+            left: 0;
+            width: 1080px;
+            overflow: hidden;
+        }
+
+        .background-top {
+            top: 0;
+            height: calc(50% - 607px / 2);
+        }
+
+        .background-bottom {
+            bottom: 0;
+            height: calc(50% - 607px / 2);
+        }
+
         .background-img {
-            width: 100%;
-            height: 100%;
+            position: absolute;
+            left: 0;
+            width: 1080px;
+            height: 1920px;
             object-fit: cover;
-            opacity: .9;
-            filter: saturate(.92) contrast(.95) sepia(.06);
+            opacity: .82;
+            filter: saturate(.92) contrast(.96) sepia(.08);
+        }
+
+        .background-top .background-img {
+            top: 0;
+        }
+
+        .background-bottom .background-img {
+            bottom: 0;
         }
 
         .background-img[src=""] {
@@ -59,7 +87,7 @@
             right: 0;
             z-index: 1;
             pointer-events: none;
-            background: rgba(248, 241, 230, .18);
+            background: rgba(255, 250, 241, .2);
         }
 
         .paper-top {
@@ -72,6 +100,51 @@
             height: calc(50% - 607px / 2);
         }
 
+        .series {
+            position: absolute;
+            top: 86px;
+            left: 90px;
+            right: 90px;
+            z-index: 5;
+            color: #a83d31;
+            font-size: 38px;
+            line-height: 1.2;
+            letter-spacing: .12em;
+            font-weight: 700;
+            text-align: center;
+            text-shadow:
+                0 2px 10px rgba(255, 250, 241, .9),
+                0 0 2px rgba(255, 250, 241, .92);
+        }
+
+        .video-title-wrapper {
+            position: absolute;
+            top: calc(50% - 607px / 2 - 430px);
+            left: 50%;
+            width: 900px;
+            transform: translateX(-50%);
+            z-index: 5;
+        }
+
+        .video-title {
+            width: 900px;
+            max-height: 258px;
+            overflow: hidden;
+            text-align: center;
+            color: #241e18;
+            font-family: "Noto Serif CJK SC", "Noto Serif CJK", "Source Han Serif SC", "Songti SC", "SimSun", serif;
+            font-size: 76px;
+            line-height: 1.16;
+            font-weight: 700;
+            letter-spacing: 0;
+            text-wrap: balance;
+            text-shadow:
+                0 2px 8px rgba(255, 250, 241, .92),
+                0 0 1px rgba(255, 250, 241, .96);
+            word-break: break-word;
+            overflow-wrap: anywhere;
+        }
+
         .video-overlay {
             position: absolute;
             top: 50%;
@@ -82,65 +155,9 @@
             z-index: 1;
         }
 
-        .video-frame {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 1080px;
-            height: 607px;
-            transform: translate(-50%, -50%);
-            z-index: 3;
-            border-top: 3px solid rgba(182, 64, 49, .72);
-            border-bottom: 3px solid rgba(182, 64, 49, .72);
-            box-shadow:
-                0 -18px 38px rgba(255, 250, 241, .42),
-                0 18px 38px rgba(36, 30, 24, .18);
-            pointer-events: none;
-        }
-
-        .series {
-            position: absolute;
-            top: 112px;
-            left: 92px;
-            z-index: 5;
-            writing-mode: vertical-rl;
-            text-orientation: mixed;
-            color: #b64031;
-            font-size: 52px;
-            line-height: 1.05;
-            letter-spacing: .18em;
-            font-weight: 800;
-        }
-
-        .video-title-wrapper {
-            position: absolute;
-            top: calc(50% - 607px / 2 - 252px);
-            left: 50%;
-            width: 760px;
-            transform: translateX(-50%);
-            z-index: 5;
-        }
-
-        .video-title {
-            width: 760px;
-            max-height: 122px;
-            overflow: hidden;
-            text-align: center;
-            color: #241e18;
-            font-size: 64px;
-            line-height: 1.18;
-            font-weight: 500;
-            letter-spacing: 0;
-            text-shadow:
-                0 2px 12px rgba(255, 250, 241, .92),
-                0 0 2px rgba(255, 250, 241, .92);
-            word-break: break-word;
-            overflow-wrap: anywhere;
-        }
-
         .content {
             position: absolute;
-            bottom: calc(50% - 607px / 2 + 24px);
+            top: calc(50% + 607px / 2 + 34px);
             left: 50%;
             width: 900px;
             transform: translateX(-50%);
@@ -148,24 +165,25 @@
         }
 
         .text {
-            max-height: 162px;
+            max-height: 168px;
             overflow: hidden;
-            padding: 24px 32px;
+            padding: 22px 34px;
             background: rgba(36, 30, 24, .84);
             color: #fff8ed;
             text-align: center;
-            font-size: 42px;
-            line-height: 1.48;
+            font-family: "Noto Serif CJK SC", "Noto Serif CJK", "Source Han Serif SC", "Songti SC", "SimSun", serif;
+            font-size: 36px;
+            line-height: 1.55;
             font-weight: 500;
-            box-shadow: 0 18px 42px rgba(36, 30, 24, .22);
+            box-shadow: 0 18px 42px rgba(36, 30, 24, .2);
             text-shadow:
-                2px 2px 4px rgba(0, 0, 0, .85),
-                0 0 8px rgba(0, 0, 0, .72);
+                2px 2px 4px rgba(0, 0, 0, .82),
+                0 0 8px rgba(0, 0, 0, .68);
         }
 
         .footer {
             position: absolute;
-            top: calc(50% + 607px / 2 + 62px);
+            top: calc(50% + 607px / 2 + 244px);
             left: 50%;
             width: 900px;
             transform: translateX(-50%);
@@ -174,7 +192,7 @@
             align-items: flex-start;
             justify-content: space-between;
             gap: 42px;
-            padding-top: 44px;
+            padding-top: 42px;
             border-top: 2px solid rgba(36, 30, 24, .18);
         }
 
@@ -182,19 +200,19 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
-            max-width: 600px;
+            max-width: 610px;
         }
 
         .author {
             color: #241e18;
-            font-size: 36px;
+            font-size: 38px;
             line-height: 1.2;
-            font-weight: 700;
+            font-weight: 800;
         }
 
         .author-desc {
             color: #6c5f50;
-            font: 28px/1.62 "Microsoft YaHei UI", sans-serif;
+            font: 28px/1.58 "Noto Serif CJK SC", "Noto Serif CJK", "Source Han Serif SC", "Songti SC", "SimSun", serif;
         }
 
         .logo-section {
@@ -202,12 +220,12 @@
             flex-direction: column;
             align-items: flex-end;
             gap: 10px;
-            min-width: 180px;
+            min-width: 210px;
         }
 
         .logo {
             color: #b64031;
-            font-size: 32px;
+            font-size: 36px;
             line-height: 1.2;
             font-weight: 800;
             letter-spacing: 0;
@@ -217,18 +235,19 @@
         .small-seal {
             position: absolute;
             right: 82px;
-            bottom: 92px;
+            bottom: 74px;
             width: 96px;
             height: 96px;
             z-index: 6;
             display: grid;
             place-items: center;
             border: 4px solid #b64031;
-            background: rgba(255, 255, 255, .22);
+            background: rgba(255, 255, 255, .18);
             color: #b64031;
             font-size: 24px;
             font-weight: 800;
             line-height: 1.05;
+            text-align: center;
             transform: rotate(4deg);
         }
     </style>
@@ -236,19 +255,23 @@
 <body>
     <div class="main-container">
         <div class="background-image">
-            <img class="background-img" src="{{background=resources/bg.png}}" alt="">
+            <div class="background-top">
+                <img class="background-img" src="{{background=resources/bg.png}}" alt="">
+            </div>
+            <div class="background-bottom">
+                <img class="background-img" src="{{background=resources/bg.png}}" alt="">
+            </div>
         </div>
         <div class="paper-top"></div>
         <div class="paper-bottom"></div>
 
-        <div class="series">{{series_name=反焦虑}}</div>
+        <div class="series">{{series_name=通过书本来缓解你的焦虑}}</div>
 
         <div class="video-title-wrapper">
             <div class="video-title">{{title}}</div>
         </div>
 
         <div class="video-overlay"></div>
-        <div class="video-frame"></div>
 
         <div class="content">
             <div class="text">{{text}}</div>
@@ -257,10 +280,10 @@
         <div class="footer">
             <div class="author-section">
                 <div class="author">{{author=@keep alive}}</div>
-                <div class="author-desc">{{describe=一个懂代码的焦虑康复者，用理科思维拆解情绪问题。}}</div>
+                <div class="author-desc">{{describe=通过书本来缓解你的焦虑}}</div>
             </div>
             <div class="logo-section">
-                <div class="logo">{{brand=反焦虑}}</div>
+                <div class="logo">{{brand=书里的另一个我}}</div>
             </div>
         </div>
 
@@ -268,24 +291,29 @@
     </div>
 
     <script>
-        function autoFitFontSize(element, maxWidth, minFontSize, maxFontSize) {
+        function autoFitMultilineFontSize(element, maxWidth, maxHeight, minFontSize, maxFontSize) {
             try {
                 if (!element || !element.textContent || !element.textContent.trim()) {
                     return;
                 }
 
-                const measure = document.createElement('span');
+                const measure = document.createElement('div');
                 measure.style.visibility = 'hidden';
                 measure.style.position = 'absolute';
                 measure.style.top = '-9999px';
                 measure.style.left = '-9999px';
-                measure.style.whiteSpace = 'nowrap';
+                measure.style.width = maxWidth + 'px';
+                measure.style.whiteSpace = 'normal';
+                measure.style.wordBreak = 'break-word';
+                measure.style.overflowWrap = 'anywhere';
 
                 const computedStyle = window.getComputedStyle(element);
                 measure.style.fontFamily = computedStyle.fontFamily;
                 measure.style.fontSize = computedStyle.fontSize;
                 measure.style.fontWeight = computedStyle.fontWeight;
                 measure.style.letterSpacing = computedStyle.letterSpacing;
+                measure.style.lineHeight = computedStyle.lineHeight;
+                measure.style.textAlign = computedStyle.textAlign;
                 measure.textContent = element.textContent;
 
                 document.body.appendChild(measure);
@@ -294,17 +322,14 @@
                 let high = maxFontSize;
                 let bestSize = maxFontSize;
 
-                measure.style.fontSize = maxFontSize + 'px';
-                if (measure.offsetWidth > maxWidth) {
-                    while (high - low > 0.5) {
-                        const mid = (low + high) / 2;
-                        measure.style.fontSize = mid + 'px';
-                        if (measure.offsetWidth <= maxWidth) {
-                            bestSize = mid;
-                            low = mid;
-                        } else {
-                            high = mid;
-                        }
+                while (high - low > 0.5) {
+                    const mid = (low + high) / 2;
+                    measure.style.fontSize = mid + 'px';
+                    if (measure.scrollWidth <= maxWidth && measure.scrollHeight <= maxHeight) {
+                        bestSize = mid;
+                        low = mid;
+                    } else {
+                        high = mid;
                     }
                 }
 
@@ -318,7 +343,7 @@
         function initAutoFit() {
             const titleElement = document.querySelector('.video-title');
             if (titleElement) {
-                autoFitFontSize(titleElement, 760, 34, 64);
+                autoFitMultilineFontSize(titleElement, 900, 258, 52, 76);
             }
         }
 

@@ -14,11 +14,13 @@
 TTS (Text-to-Speech) Service - Supports both local and ComfyUI inference
 """
 
+import asyncio
 import os
 import uuid
 from pathlib import Path
 from typing import Optional
 
+import httpx
 from comfykit import ComfyKit
 from loguru import logger
 
@@ -50,6 +52,11 @@ class TTSService(ComfyBaseService):
     WORKFLOW_PREFIX = "tts_"
     DEFAULT_WORKFLOW = None  # No hardcoded default, must be configured
     WORKFLOWS_DIR = "workflows"
+    RUNNINGHUB_QUEUE_RETRY_COUNT = 3
+    RUNNINGHUB_QUEUE_RETRY_BASE_DELAY = 3.0
+    DOWNLOAD_RETRY_COUNT = 3
+    DOWNLOAD_RETRY_BASE_DELAY = 2.0
+    DOWNLOAD_TIMEOUT = httpx.Timeout(connect=30.0, read=300.0, write=60.0, pool=60.0)
     
     def __init__(self, config: dict, core=None):
         """
@@ -252,7 +259,12 @@ class TTSService(ComfyBaseService):
                 workflow_input = workflow_info["path"]
                 logger.info(f"Executing selfhost TTS workflow: {workflow_input}")
             
-            result = await kit.execute(workflow_input, workflow_params)
+            result = await self._execute_with_runninghub_queue_retry(
+                kit=kit,
+                workflow_input=workflow_input,
+                workflow_params=workflow_params,
+                is_runninghub=workflow_info["source"] == "runninghub",
+            )
             
             # 4. Handle result
             if result.status != "completed":
@@ -293,19 +305,7 @@ class TTSService(ComfyBaseService):
             
             # If output_path provided and audio_path is URL, download to local
             if output_path and audio_path.startswith(('http://', 'https://')):
-                import httpx
-                import os
-                
-                # Ensure parent directory exists
-                os.makedirs(os.path.dirname(output_path), exist_ok=True)
-                
-                logger.info(f"Downloading audio from {audio_path} to {output_path}")
-                async with httpx.AsyncClient() as client:
-                    response = await client.get(audio_path)
-                    response.raise_for_status()
-                    
-                    with open(output_path, 'wb') as f:
-                        f.write(response.content)
+                await self._download_audio_with_retry(audio_path, output_path)
                 
                 logger.info(f"✅ Generated audio (ComfyUI): {output_path}")
                 return output_path
@@ -316,3 +316,95 @@ class TTSService(ComfyBaseService):
         except Exception as e:
             logger.error(f"TTS generation error: {e}")
             raise
+
+    @classmethod
+    def _download_retry_delay(cls, attempt: int) -> float:
+        """Small exponential backoff for transient audio download failures."""
+        return cls.DOWNLOAD_RETRY_BASE_DELAY * (2 ** (attempt - 1))
+
+    async def _download_audio_with_retry(self, audio_url: str, output_path: str) -> None:
+        """Download generated audio with longer timeouts and transient retry handling."""
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        max_attempts = 1 + self.DOWNLOAD_RETRY_COUNT
+
+        for attempt in range(1, max_attempts + 1):
+            try:
+                logger.info(f"Downloading audio from {audio_url} to {output_path}")
+                async with httpx.AsyncClient(timeout=self.DOWNLOAD_TIMEOUT) as client:
+                    response = await client.get(audio_url)
+                    response.raise_for_status()
+
+                    with open(output_path, 'wb') as f:
+                        f.write(response.content)
+                return
+
+            except (httpx.TimeoutException, httpx.NetworkError) as e:
+                if attempt >= max_attempts:
+                    raise
+
+                delay = self._download_retry_delay(attempt)
+                logger.warning(
+                    "Audio download failed "
+                    f"(attempt {attempt}/{max_attempts}, {type(e).__name__}); "
+                    f"retrying in {delay:.1f}s"
+                )
+                await asyncio.sleep(delay)
+
+    @classmethod
+    def _is_runninghub_queue_maxed(cls, error_msg: str) -> bool:
+        """Return True for RunningHub transient queue-full errors."""
+        return "TASK_QUEUE_MAXED" in (error_msg or "")
+
+    @classmethod
+    def _runninghub_queue_retry_delay(cls, attempt: int) -> float:
+        """Small exponential backoff for queue-full retry attempts."""
+        return cls.RUNNINGHUB_QUEUE_RETRY_BASE_DELAY * (2 ** (attempt - 1))
+
+    async def _execute_with_runninghub_queue_retry(
+        self,
+        kit,
+        workflow_input,
+        workflow_params: dict,
+        is_runninghub: bool,
+    ):
+        max_attempts = 1 + (self.RUNNINGHUB_QUEUE_RETRY_COUNT if is_runninghub else 0)
+
+        for attempt in range(1, max_attempts + 1):
+            try:
+                result = await kit.execute(workflow_input, workflow_params)
+            except Exception as e:
+                error_msg = str(e)
+                if (
+                    is_runninghub
+                    and self._is_runninghub_queue_maxed(error_msg)
+                    and attempt < max_attempts
+                ):
+                    delay = self._runninghub_queue_retry_delay(attempt)
+                    logger.warning(
+                        "RunningHub TTS queue is full "
+                        f"(attempt {attempt}/{max_attempts}); retrying in {delay:.1f}s"
+                    )
+                    await asyncio.sleep(delay)
+                    continue
+                raise
+
+            if result.status == "completed":
+                return result
+
+            error_msg = result.msg or "Unknown error"
+            if (
+                is_runninghub
+                and self._is_runninghub_queue_maxed(error_msg)
+                and attempt < max_attempts
+            ):
+                delay = self._runninghub_queue_retry_delay(attempt)
+                logger.warning(
+                    "RunningHub TTS queue is full "
+                    f"(attempt {attempt}/{max_attempts}); retrying in {delay:.1f}s"
+                )
+                await asyncio.sleep(delay)
+                continue
+
+            return result
+
+        return result

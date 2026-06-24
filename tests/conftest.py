@@ -35,3 +35,23 @@ if "ffmpeg" not in sys.modules:
 
     ffmpeg_stub.Error = Error
     sys.modules["ffmpeg"] = ffmpeg_stub
+
+if "edge_tts" not in sys.modules:
+    edge_tts_stub = types.ModuleType("edge_tts")
+
+    class Communicate:
+        def __init__(self, *args, **kwargs):
+            pass
+
+    edge_tts_stub.Communicate = Communicate
+    edge_tts_stub.list_voices = lambda: []
+    sys.modules["edge_tts"] = edge_tts_stub
+
+if "edge_tts.exceptions" not in sys.modules:
+    edge_tts_exceptions_stub = types.ModuleType("edge_tts.exceptions")
+
+    class NoAudioReceived(Exception):
+        pass
+
+    edge_tts_exceptions_stub.NoAudioReceived = NoAudioReceived
+    sys.modules["edge_tts.exceptions"] = edge_tts_exceptions_stub

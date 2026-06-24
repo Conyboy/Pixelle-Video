@@ -38,6 +38,7 @@ from pixelle_video.utils.content_generators import (
     generate_image_prompts,
     generate_narrations_from_topic,
     generate_title,
+    generate_video_prompts,
     split_narration_script,
 )
 from pixelle_video.utils.os_util import create_task_output_dir, get_task_final_video_path
@@ -67,6 +68,41 @@ class StandardPipeline(LinearVideoPipeline):
     """
     
     # ==================== Lifecycle Methods ====================
+
+    @staticmethod
+    def _is_runninghub_workflow(workflow: str | None) -> bool:
+        return bool(workflow and workflow.startswith("runninghub/"))
+
+    def _resolve_frame_concurrent_limit(self, ctx: PipelineContext, config: StoryboardConfig) -> int:
+        """Resolve frame concurrency and cap it when a frame step uses RunningHub."""
+        from pixelle_video.config import config_manager
+
+        video_concurrent_limit = ctx.params.get("video_concurrent_limit")
+        if video_concurrent_limit is None:
+            video_concurrent_limit = config_manager.config.comfyui.video.concurrent_limit
+        video_concurrent_limit = int(video_concurrent_limit or 1)
+
+        effective_tts_workflow = (
+            config.tts_workflow
+            or config_manager.config.comfyui.tts.default_workflow
+        )
+        uses_runninghub = (
+            config.tts_inference_mode == "comfyui"
+            and self._is_runninghub_workflow(effective_tts_workflow)
+        ) or self._is_runninghub_workflow(config.media_workflow)
+
+        if uses_runninghub:
+            runninghub_limit = int(config_manager.config.comfyui.runninghub_concurrent_limit or 1)
+            capped_limit = min(video_concurrent_limit, runninghub_limit)
+            if capped_limit < video_concurrent_limit:
+                logger.info(
+                    "Capping frame concurrency from "
+                    f"{video_concurrent_limit} to {capped_limit} "
+                    "because this video uses RunningHub workflows"
+                )
+            return capped_limit
+
+        return video_concurrent_limit
 
     async def setup_environment(self, ctx: PipelineContext):
         """Step 1: Setup task directory and environment."""
@@ -169,48 +205,41 @@ class StandardPipeline(LinearVideoPipeline):
             min_words = ctx.params.get("min_image_prompt_words", 30)
             max_words = ctx.params.get("max_image_prompt_words", 60)
             
-            # Override prompt_prefix if provided
-            original_prefix = None
+            media_config_key = "video" if template_type == "video" else "image"
+            media_config = self.core.config.get("comfyui", {}).get(media_config_key, {})
+            prompt_generator = generate_video_prompts if template_type == "video" else generate_image_prompts
+
             if prompt_prefix is not None:
-                image_config = self.core.config.get("comfyui", {}).get("image", {})
-                original_prefix = image_config.get("prompt_prefix")
-                image_config["prompt_prefix"] = prompt_prefix
-                logger.info(f"Using custom prompt_prefix: '{prompt_prefix}'")
-            
-            try:
-                # Create progress callback wrapper for image prompt generation
-                def image_prompt_progress(completed: int, total: int, message: str):
-                    batch_progress = completed / total if total > 0 else 0
-                    overall_progress = 0.15 + (batch_progress * 0.15)
-                    self._report_progress(
-                        ctx.progress_callback,
-                        "generating_image_prompts",
-                        overall_progress,
-                        extra_info=message
-                    )
-                
-                # Generate base image prompts
-                base_image_prompts = await generate_image_prompts(
-                    self.llm,
-                    narrations=ctx.narrations,
-                    min_words=min_words,
-                    max_words=max_words,
-                    progress_callback=image_prompt_progress
+                logger.info(f"Using custom {media_config_key} prompt_prefix: '{prompt_prefix}'")
+
+            # Create progress callback wrapper for prompt generation
+            def prompt_progress(completed: int, total: int, message: str):
+                batch_progress = completed / total if total > 0 else 0
+                overall_progress = 0.15 + (batch_progress * 0.15)
+                self._report_progress(
+                    ctx.progress_callback,
+                    "generating_image_prompts",
+                    overall_progress,
+                    extra_info=message
                 )
-                
-                # Apply prompt prefix
-                image_config = self.core.config.get("comfyui", {}).get("image", {})
-                prompt_prefix_to_use = prompt_prefix if prompt_prefix is not None else image_config.get("prompt_prefix", "")
-                
-                ctx.image_prompts = []
-                for base_prompt in base_image_prompts:
-                    final_prompt = build_image_prompt(base_prompt, prompt_prefix_to_use)
-                    ctx.image_prompts.append(final_prompt)
-                
-            finally:
-                # Restore original prompt_prefix
-                if original_prefix is not None:
-                    image_config["prompt_prefix"] = original_prefix
+
+            # Generate base prompts. Video templates rewrite narrations into
+            # motion-oriented video prompts; image templates keep image prompts.
+            base_prompts = await prompt_generator(
+                self.llm,
+                narrations=ctx.narrations,
+                min_words=min_words,
+                max_words=max_words,
+                progress_callback=prompt_progress
+            )
+
+            # Apply prompt prefix
+            prompt_prefix_to_use = prompt_prefix if prompt_prefix is not None else media_config.get("prompt_prefix", "")
+
+            ctx.image_prompts = []
+            for base_prompt in base_prompts:
+                final_prompt = build_image_prompt(base_prompt, prompt_prefix_to_use)
+                ctx.image_prompts.append(final_prompt)
             
             logger.info(f"✅ Generated {len(ctx.image_prompts)} image prompts")
         else:
@@ -290,11 +319,7 @@ class StandardPipeline(LinearVideoPipeline):
         config = ctx.config
         
         # Get single-video frame concurrent limit from params/config.
-        from pixelle_video.config import config_manager
-        video_concurrent_limit = ctx.params.get("video_concurrent_limit")
-        if video_concurrent_limit is None:
-            video_concurrent_limit = config_manager.config.comfyui.video.concurrent_limit
-        video_concurrent_limit = int(video_concurrent_limit or 1)
+        video_concurrent_limit = self._resolve_frame_concurrent_limit(ctx, config)
         
         if video_concurrent_limit > 1 and len(storyboard.frames) > 1:
             logger.info(f"🚀 Using parallel processing for storyboard frames (max {video_concurrent_limit} concurrent)")

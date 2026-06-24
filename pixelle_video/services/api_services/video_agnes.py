@@ -16,6 +16,8 @@ AGNES_BASE_URL = "https://apihub.agnes-ai.com"
 class AgnesVideoClient:
     """Client for Agnes asynchronous text-to-video generation."""
 
+    MAX_NUM_FRAMES = 441
+
     def __init__(
         self,
         api_key: Optional[str] = None,
@@ -56,7 +58,9 @@ class AgnesVideoClient:
         resolved_width = int(width or kwargs.get("media_width") or 1152)
         resolved_height = int(height or kwargs.get("media_height") or 768)
         resolved_frame_rate = int(frame_rate or kwargs.get("frame_rate") or 24)
-        num_frames = max(1, int(round(float(duration) * resolved_frame_rate)))
+        num_frames = self._normalize_num_frames(
+            int(round(float(duration) * resolved_frame_rate))
+        )
 
         video_id = self._submit_task(
             prompt=prompt,
@@ -96,7 +100,7 @@ class AgnesVideoClient:
             "prompt": prompt,
             "height": height,
             "width": width,
-            "num_frames": num_frames,
+            "num_frames": self._normalize_num_frames(num_frames),
             "frame_rate": frame_rate,
         }
 
@@ -109,14 +113,24 @@ class AgnesVideoClient:
             proxies=self._proxies(),
         )
         if not resp.ok:
-            logger.error(f"Agnes task creation failed: {resp.text}")
-            resp.raise_for_status()
+            error_msg = (
+                f"Agnes task creation failed "
+                f"(HTTP {getattr(resp, 'status_code', 'unknown')}): {resp.text}"
+            )
+            logger.error(error_msg)
+            raise RuntimeError(error_msg)
 
         data = resp.json()
         video_id = data.get("video_id")
         if not video_id:
             raise RuntimeError(f"Agnes API did not return video_id: {data}")
         return video_id
+
+    @classmethod
+    def _normalize_num_frames(cls, num_frames: int) -> int:
+        """Agnes requires num_frames to be 8n+1 and <= 441."""
+        clamped = min(max(1, int(num_frames)), cls.MAX_NUM_FRAMES)
+        return clamped if clamped % 8 == 1 else clamped + (1 - clamped % 8)
 
     def _poll_until_done(self, video_id: str, model: str) -> str:
         query = urlencode({"video_id": video_id, "model_name": model})

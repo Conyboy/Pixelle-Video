@@ -490,7 +490,7 @@ def _parse_json(text: str) -> dict:
             pass
     
     # Try to find any JSON object in the text
-    json_pattern = r'\{[^{}]*(?:"narrations"|"image_prompts")\s*:\s*\[[^\]]*\][^{}]*\}'
+    json_pattern = r'\{[^{}]*(?:"narrations"|"image_prompts"|"video_prompts")\s*:\s*\[[^\]]*\][^{}]*\}'
     match = re.search(json_pattern, text, re.DOTALL)
     if match:
         try:
